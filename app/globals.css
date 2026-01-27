@@ -1,0 +1,341 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-inter: 'Inter', system-ui, sans-serif;
+    --font-playfair: 'Playfair Display', serif;
+    --font-sora: 'Sora', sans-serif;
+    --font-cormorant: 'Cormorant Garamond', serif;
+  }
+
+  * {
+    @apply border-obsidian-800;
+  }
+
+  body {
+    @apply bg-obsidian-950 text-ivory-300 antialiased;
+  }
+
+  html.lenis {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
+  }
+}
+
+@layer components {
+
+  /* ULTRA-LUXURY: Frosted Glass Button Styles (2026) with Metallic Engraving */
+  .btn-primary {
+    @apply relative px-12 py-5 bg-ivory-300/5 backdrop-blur-xl text-ivory-300 font-display font-light text-sm tracking-[0.2em] uppercase overflow-hidden transition-all duration-700 ease-out border border-bronze-600/30;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .btn-primary::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-bronze opacity-0 transition-opacity duration-700;
+  }
+
+  .btn-primary:hover::before {
+    opacity: 0.15;
+  }
+
+  .btn-primary::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-[1px] bg-bronze-500 transition-all duration-700;
+  }
+
+  .btn-primary:hover::after {
+    width: 100%;
+  }
+
+  .btn-primary:hover {
+    @apply text-bronze-400 border-bronze-500/60 shadow-2xl shadow-bronze-500/20;
+    transform: scale(1.03);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.5), 0 10px 40px rgba(160, 137, 104, 0.3);
+  }
+
+  .btn-primary:active {
+    transform: scale(0.98);
+  }
+
+  .btn-secondary {
+    @apply relative px-12 py-5 bg-transparent text-ivory-300 font-display font-light text-sm tracking-[0.2em] uppercase border border-bronze-600/20 overflow-hidden transition-all duration-700;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  }
+
+  .btn-secondary::before {
+    content: '';
+    @apply absolute inset-0 bg-bronze-600/5 scale-x-0 transition-transform duration-700 origin-left;
+  }
+
+  .btn-secondary:hover::before {
+    scale: 1;
+  }
+
+  .btn-secondary::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-bronze-500 to-transparent scale-x-0 transition-transform duration-700;
+  }
+
+  .btn-secondary:hover::after {
+    scale: 1;
+  }
+
+  .btn-secondary:hover {
+    @apply border-bronze-500/40 text-bronze-400;
+    transform: scale(1.03);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 8px 30px rgba(160, 137, 104, 0.2);
+  }
+
+  .btn-secondary:active {
+    transform: scale(0.98);
+  }
+
+  /* ULTRA-LUXURY: Editorial Card Styles */
+  .card-luxury {
+    @apply bg-obsidian-900/30 backdrop-blur-xl border border-bronze-600/10 hover:border-bronze-500/30 transition-all duration-700 ease-out hover:shadow-2xl hover:shadow-bronze-500/10 relative overflow-hidden;
+  }
+
+  .card-luxury::before {
+    content: '';
+    @apply absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-bronze-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700;
+  }
+
+  /* Section Spacing - Editorial with extreme margins */
+  .section {
+    @apply py-24 md:py-36 lg:py-48 px-4 sm:px-8 lg:px-16 xl:px-24;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto;
+  }
+
+  .container-editorial {
+    @apply max-w-[85%] lg:max-w-[80%] xl:max-w-[75%] mx-auto;
+  }
+
+  /* CINEMATIC: Massive Display Typography (8-12vw) */
+  .heading-hero {
+    @apply font-display text-[8vw] md:text-[10vw] lg:text-[12vw] font-light tracking-[0.15em] leading-[0.9] uppercase;
+  }
+
+  .heading-display {
+    @apply font-display text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-light tracking-[0.1em] leading-[0.95] uppercase;
+  }
+
+  .heading-xl {
+    @apply font-display text-5xl md:text-6xl lg:text-7xl font-light tracking-[0.08em] uppercase;
+  }
+
+  .heading-lg {
+    @apply font-display text-4xl md:text-5xl lg:text-6xl font-light tracking-[0.06em];
+  }
+
+  .heading-md {
+    @apply font-heading text-2xl md:text-3xl lg:text-4xl font-normal tracking-wide;
+  }
+
+  /* Bronze Accent - Refined & Elegant */
+  .text-bronze {
+    @apply text-transparent bg-clip-text bg-gradient-bronze;
+  }
+
+  /* EDITORIAL: Refined Glassmorphism */
+  .glass {
+    @apply bg-ivory-300/[0.02] backdrop-blur-2xl border border-bronze-600/10;
+  }
+
+  .glass-dark {
+    @apply bg-obsidian-950/80 backdrop-blur-2xl border border-bronze-600/20;
+  }
+}
+
+@layer utilities {
+
+  /* Text Shadow - More subtle */
+  .text-shadow {
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+
+  .text-shadow-sm {
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Shimmer Animation - More elegant */
+  .animate-shimmer {
+    background-size: 200% 100%;
+    animation: shimmer 12s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  /* Fade Animations */
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Luxury Underline */
+  .luxury-underline {
+    @apply relative;
+  }
+
+  .luxury-underline::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-gold-500 to-transparent;
+  }
+}
+
+/* ULTRA-MINIMAL: Refined Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-obsidian-950;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-bronze-600/20 hover:bg-bronze-500/40 transition-colors;
+}
+
+/* Selection Color */
+::selection {
+  @apply bg-bronze-600/30 text-ivory-300;
+}
+
+/* Focus States - Elegant */
+button:focus-visible,
+a:focus-visible {
+  @apply outline-none ring-2 ring-bronze-500/30 ring-offset-2 ring-offset-obsidian-950;
+}
+
+/* ULTRA-LUXURY: Custom Cursor System */
+.luxury-cursor-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.luxury-cursor-dot {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: #a08968;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 10000;
+  mix-blend-mode: difference;
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.luxury-cursor-trail {
+  position: fixed;
+  background: #a08968;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+}
+
+/* ULTRA-LUXURY: Ripple Effect for CTAs */
+.ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(160, 137, 104, 0.4) 0%, transparent 70%);
+  pointer-events: none;
+  transform: scale(0);
+}
+
+/* ULTRA-LUXURY: Animated Noise Texture */
+@keyframes noiseAnimation {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -5%); }
+  20% { transform: translate(-10%, 5%); }
+  30% { transform: translate(5%, -10%); }
+  40% { transform: translate(-5%, 15%); }
+  50% { transform: translate(-10%, 5%); }
+  60% { transform: translate(15%, 0); }
+  70% { transform: translate(0, 10%); }
+  80% { transform: translate(-15%, 0); }
+  90% { transform: translate(10%, 5%); }
+}
+
+.animated-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.015;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii45IiBudW1PY3RhdmVzPSI1IiB0eXBlPSJmcmFjdGFsTm9pc2UiLz48ZmVDb2xvck1hdHJpeCB0eXBlPSJzYXR1cmF0ZSIgdmFsdWVzPSIwIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIi8+PC9zdmc+');
+  background-size: 400px 400px;
+  animation: noiseAnimation 20s steps(10) infinite;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* ULTRA-LUXURY: Property Card enhancements */
+.property-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.property-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, rgba(160, 137, 104, 0.3), transparent 50%, rgba(160, 137, 104, 0.3)) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  pointer-events: none;
+}
+
+.property-card:hover::before {
+  opacity: 1;
+}
