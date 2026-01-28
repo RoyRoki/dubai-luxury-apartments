@@ -59,10 +59,10 @@ const paymentPlans = [
 ]
 
 const financingPartners = [
-  { name: 'Emirates NBD', logo: 'ENBD.png' },
-  { name: 'Dubai Islamic Bank', logo: 'DIB.png' },
-  { name: 'HSBC Middle East', logo: 'HSBC.png' },
-  { name: 'Mashreq Bank', logo: 'MASHREQ.png' },
+  { name: 'Emirates NBD', logo: 'ENBD.webp' },
+  { name: 'Dubai Islamic Bank', logo: 'DIB.webp' },
+  { name: 'HSBC Middle East', logo: 'HSBC.webp' },
+  { name: 'Mashreq Bank', logo: 'MASHREQ.webp' },
 ]
 
 export default function PaymentPlans() {

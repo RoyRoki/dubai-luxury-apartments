@@ -99,7 +99,7 @@ export default function Header({ lenisInstance }: HeaderProps) {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
+      className={`fixed top-0 left-0 right-0 z-[90] transition-all duration-500 ${isScrolled
         ? 'bg-obsidian-950/98 backdrop-blur-xl shadow-2xl shadow-bronze-500/10 border-b border-bronze-600/10'
         : 'bg-obsidian-950/40 backdrop-blur-md border-b border-bronze-600/5'
         }`}

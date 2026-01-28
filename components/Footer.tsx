@@ -120,7 +120,13 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 text-xs text-ivory-700 font-light">
-            <span>© {currentYear} Dubai Luxury. All rights reserved.</span>
+            <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+              <span>© {currentYear} Dubai Luxury. All rights reserved.</span>
+              <span className="hidden md:inline text-bronze-600/30">|</span>
+              <span>
+                Developed by <a href="https://www.linkedin.com/in/rokiroy/" target="_blank" rel="noopener noreferrer" className="hover:text-bronze-500 transition-colors font-normal">ROKI ROY</a>
+              </span>
+            </div>
             <div className="flex gap-6">
               <a href="#" className="hover:text-bronze-500 transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-bronze-500 transition-colors">Terms of Service</a>

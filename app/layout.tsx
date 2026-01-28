@@ -1,9 +1,22 @@
 import type { Metadata } from 'next'
 import { Inter, Playfair_Display, Sora, Cormorant_Garamond } from 'next/font/google'
 import './globals.css'
+import { getAssetPath } from '@/lib/utils'
+import ImagePreloader from '@/components/ImagePreloader'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
-const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' })
+// Define fonts with variable names for Tailwind usage
+// Inter - consistently modern sans
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+})
+
+// Playfair Display - elegant serif for headings
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair',
+})
+
 const sora = Sora({ subsets: ['latin'], variable: '--font-sora' })
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
@@ -11,12 +24,9 @@ const cormorant = Cormorant_Garamond({
   variable: '--font-cormorant'
 })
 
-import { getAssetPath } from '@/lib/utils'
-
 export const metadata: Metadata = {
-  title: 'Dubai Luxury Apartments | Premium Properties in Prime Locations',
-  description: 'Discover exclusive luxury apartments in Dubai\'s most prestigious locations - Downtown, Marina, and Palm Jumeirah. Schedule your viewing today.',
-  keywords: 'Dubai luxury apartments, premium properties Dubai, Downtown Dubai, Dubai Marina, Palm Jumeirah, luxury real estate',
+  title: 'Dubai Luxury Apartments | Premium Properties',
+  description: 'Exclusive luxury living in Dubai\'s prime locations',
   icons: {
     icon: getAssetPath('/logo.webp'),
     shortcut: getAssetPath('/logo.webp'),
@@ -35,8 +45,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable} ${sora.variable} ${cormorant.variable} font-sans antialiased bg-obsidian-950 text-ivory-300`}>
+    <html lang="en" className="scroll-smooth">
+      <body className={`${inter.variable} ${playfair.variable} ${sora.variable} ${cormorant.variable} font-sans antialiased bg-obsidian-950 text-ivory-300 selection:bg-bronze-500 selection:text-white`}>
+        <ImagePreloader />
         {children}
       </body>
     </html>

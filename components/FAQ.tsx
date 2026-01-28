@@ -130,7 +130,7 @@ export default function FAQ() {
             ))}
 
             {/* Still Have Questions CTA */}
-            <div className="text-left mt-12 pt-8 border-t border-white/10">
+            <div className="text-center md:text-left mt-12 pt-8 border-t border-white/10">
               <p className="text-ivory-400 mb-4 font-light">Still have questions?</p>
               <button
                 onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}

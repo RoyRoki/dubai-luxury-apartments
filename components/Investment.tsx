@@ -11,37 +11,61 @@ export default function Investment() {
   const sectionRef = useRef<HTMLElement>(null)
 
   useLayoutEffect(() => {
+    if (typeof window === 'undefined') return
+
     gsap.registerPlugin(ScrollTrigger)
+
+    // Mobile-specific optimizations
+    const isMobile = window.innerWidth < 768
+
+    // Configure ScrollTrigger for better mobile performance
+    ScrollTrigger.config({
+      ignoreMobileResize: true, // Prevent recalculation on mobile resize
+      autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load', // Limit refresh events
+    })
 
     const ctx = gsap.context(() => {
       // Counter animations for main stats (5.8%, 0.0%, 15.0%)
-      const statCounters = document.querySelectorAll('.stat-counter')
+      const statCounters = document.querySelectorAll<HTMLElement>('.stat-counter')
+
       statCounters.forEach((counter) => {
         const target = parseFloat(counter.getAttribute('data-target') || '0')
         const isDecimal = counter.getAttribute('data-decimal') === 'true'
+        let hasAnimated = false
 
-        const obj = { value: 0 }
+        // Add will-change for GPU acceleration
+        counter.style.willChange = 'contents'
 
-        // Animate the number counting up
-        gsap.to(obj, {
-          value: target,
-          duration: 2.5,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: counter,
-            start: 'top 85%', // Trigger earlier to be visible sooner
-            toggleActions: 'play none none none', // Play once and stay
-          },
-          onUpdate: () => {
-            counter.textContent = isDecimal
-              ? obj.value.toFixed(1)
-              : Math.round(obj.value).toString()
+        ScrollTrigger.create({
+          trigger: counter,
+          start: 'top 80%',
+          onEnter: () => {
+            if (!hasAnimated) {
+              hasAnimated = true
+              const obj = { value: 0 }
+
+              gsap.to(obj, {
+                value: target,
+                duration: isMobile ? 1.5 : 2.0, // Faster animation on mobile
+                ease: 'power2.out',
+                onUpdate: () => {
+                  counter.textContent = isDecimal
+                    ? obj.value.toFixed(1)
+                    : Math.round(obj.value).toString()
+                },
+                onComplete: () => {
+                  // Remove will-change after animation completes
+                  counter.style.willChange = 'auto'
+                }
+              })
+            }
           },
         })
       })
 
       // Counter animations for bottom stats ($2.3B, 200+, 10 Years)
-      const bottomCounters = document.querySelectorAll('.bottom-stat-counter')
+      const bottomCounters = document.querySelectorAll<HTMLElement>('.bottom-stat-counter')
+
       bottomCounters.forEach((counter) => {
         const text = counter.getAttribute('data-text') || ''
         const numMatch = text.match(/[\d.]+/)
@@ -49,36 +73,48 @@ export default function Investment() {
           const target = parseFloat(numMatch[0])
           const prefix = text.split(numMatch[0])[0]
           const suffix = text.split(numMatch[0])[1]
+          let hasAnimated = false
 
-          const obj = { value: 0 }
+          // Add will-change for GPU acceleration
+          counter.style.willChange = 'contents'
 
-          gsap.to(obj, {
-            value: target,
-            duration: 2.5,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: counter,
-              start: 'top 90%',
-              toggleActions: 'play none none none',
-            },
-            onUpdate: () => {
-              const displayValue = suffix.includes('.') || text.includes('.')
-                ? obj.value.toFixed(1)
-                : Math.round(obj.value).toString()
-              counter.textContent = `${prefix}${displayValue}${suffix}`
+          ScrollTrigger.create({
+            trigger: counter,
+            start: 'top 80%',
+            onEnter: () => {
+              if (!hasAnimated) {
+                hasAnimated = true
+                const obj = { value: 0 }
+
+                gsap.to(obj, {
+                  value: target,
+                  duration: isMobile ? 1.8 : 2.5, // Faster animation on mobile
+                  ease: 'power2.out',
+                  onUpdate: () => {
+                    const displayValue = suffix.includes('.') || text.includes('.')
+                      ? obj.value.toFixed(1)
+                      : Math.round(obj.value).toString()
+                    counter.textContent = `${prefix}${displayValue}${suffix}`
+                  },
+                  onComplete: () => {
+                    // Remove will-change after animation completes
+                    counter.style.willChange = 'auto'
+                  }
+                })
+              }
             },
           })
         }
       })
-    }, sectionRef) // Scope to sectionRef
+    }, sectionRef)
 
-    return () => ctx.revert() // Cleanup
+    return () => ctx.revert()
   }, [])
 
   const stats = [
     { value: '5.8', unit: '%', label: 'Annual Yield', description: 'Industry-leading returns in prime locations' },
-    { value: '0', unit: '%', label: 'Tax Rate', description: 'No property, income, or capital gains tax' },
-    { value: '15', unit: '%', label: 'Growth Rate', description: 'Average annual property value appreciation' },
+    { value: '0.0', unit: '%', label: 'Tax Rate', description: 'No property, income, or capital gains tax' },
+    { value: '15.0', unit: '%', label: 'Growth Rate', description: 'Average annual property value appreciation' },
   ]
 
   return (

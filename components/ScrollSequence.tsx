@@ -147,6 +147,11 @@ export default function ScrollSequence({
             // GSAP ScrollTrigger
             const obj = { frame: 0 }
 
+            // Longer scroll duration on mobile for better viewing
+            const isMobile = window.innerWidth < 768
+            const scrollDuration = isMobile ? '+=250%' : '+=150%'
+            const pinSpacing = !isMobile // Disable pinSpacing on mobile to prevent black gaps
+
             gsap.to(obj, {
                 frame: frameCount - 1,
                 snap: 'frame',
@@ -154,10 +159,10 @@ export default function ScrollSequence({
                 scrollTrigger: {
                     trigger: containerRef.current,
                     start: 'top top',
-                    end: '+=150%', // 1.5x viewport height for proper pinning duration
+                    end: scrollDuration, // Extended on mobile for better UX
                     scrub: 0.5,
                     pin: true,
-                    pinSpacing: true,
+                    pinSpacing: pinSpacing, // Disabled on mobile to prevent gaps
                     anticipatePin: 1,
                     invalidateOnRefresh: true,
                     onUpdate: (self) => renderFrame(obj.frame),

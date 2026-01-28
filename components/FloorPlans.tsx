@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -254,21 +255,19 @@ export default function FloorPlans() {
         </div>
 
         {/* Virtual Tour Modal */}
-        {isVirtualTourOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
-            {/* Backdrop with blur */}
+        {/* Virtual Tour Modal */}
+        {isVirtualTourOpen && typeof document !== 'undefined' && createPortal(
+          <div className="fixed inset-0 bg-obsidian-950/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 md:p-8" onClick={() => setIsVirtualTourOpen(false)}>
+            {/* Modal Content - Matched to ViewingFormCard styles */}
             <div
-              className="absolute inset-0 bg-obsidian-950/80 backdrop-blur-md transition-opacity duration-300"
-              onClick={() => setIsVirtualTourOpen(false)}
-            />
-
-            {/* Modal Content */}
-            <div className="relative w-full max-w-7xl aspect-video bg-obsidian-900 rounded-sm overflow-hidden shadow-2xl border border-bronze-500/20 animate-in fade-in zoom-in-95 duration-300">
+              className="relative w-full max-w-7xl aspect-video bg-obsidian-900/50 backdrop-blur-sm rounded-2xl overflow-hidden shadow-2xl border border-bronze-600/10 animate-in fade-in zoom-in-95 duration-300"
+              onClick={(e) => e.stopPropagation()}
+            >
               <button
                 onClick={() => setIsVirtualTourOpen(false)}
-                className="absolute top-4 right-4 z-10 p-2 bg-obsidian-950/50 hover:bg-bronze-500 hover:text-obsidian-950 text-ivory-100 rounded-full transition-all duration-300"
+                className="absolute top-4 right-4 z-50 p-2 bg-obsidian-950/50 hover:bg-bronze-500 hover:text-obsidian-950 text-ivory-100 rounded-full transition-all duration-300"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5" />
               </button>
 
               <iframe
@@ -278,7 +277,8 @@ export default function FloorPlans() {
                 title="Virtual Tour"
               />
             </div>
-          </div>
+          </div>,
+          document.body
         )}
       </div>
     </section>

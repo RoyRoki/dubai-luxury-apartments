@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import Image from 'next/image'
+import { getAssetPath } from '@/lib/utils'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Building2, Award, Users, TrendingUp, CheckCircle, ExternalLink } from 'lucide-react'
@@ -148,10 +150,16 @@ export default function DeveloperPartners() {
 
               <div className="relative z-10 p-8">
                 {/* Logo */}
-                <div className="mb-6 h-16 flex items-center justify-center bg-bronze-500/10 group-hover:bg-bronze-500/20 transition-all duration-300">
-                  <span className="text-2xl font-light text-bronze-500 tracking-[0.2em]">
-                    {developer.logo}
-                  </span>
+                {/* Logo */}
+                <div className="mb-6 h-16 w-full relative flex items-center justify-center bg-bronze-500/10 group-hover:bg-bronze-500/20 transition-all duration-300 px-6">
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={getAssetPath(`/images/logos/${developer.logo}.webp`)}
+                      alt={`${developer.name} Logo`}
+                      fill
+                      className="object-contain opacity-70 group-hover:opacity-100 transition-opacity duration-300"
+                    />
+                  </div>
                 </div>
 
                 {/* Name */}

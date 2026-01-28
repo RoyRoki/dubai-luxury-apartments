@@ -35,7 +35,7 @@ export default function Location() {
   ]
 
   return (
-    <section ref={sectionRef} className="section bg-obsidian-900 min-h-screen flex flex-col justify-center relative overflow-hidden z-30" id="location">
+    <section ref={sectionRef} className="section bg-obsidian-900 flex flex-col justify-center relative overflow-hidden z-50" id="location">
       <div className="container-editorial">
         {/* Section Header */}
         <div className="text-center mb-20 md:mb-28">
