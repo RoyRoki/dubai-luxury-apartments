@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, MouseEvent } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { scrollToElement } from '@/lib/utils'
+import { scrollToElement, getAssetPath } from '@/lib/utils'
 import { createRipple } from '@/lib/animations'
 import Image from 'next/image'
 
