@@ -1,9 +1,12 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { CreditCard, PiggyBank, Building, Check, Sparkles, TrendingUp } from 'lucide-react'
+import MortgageCalculator from './MortgageCalculator'
+import { getAssetPath } from '@/lib/utils'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -56,14 +59,15 @@ const paymentPlans = [
 ]
 
 const financingPartners = [
-  { name: 'Emirates NBD', logo: 'ENBD' },
-  { name: 'Dubai Islamic Bank', logo: 'DIB' },
-  { name: 'HSBC Middle East', logo: 'HSBC' },
-  { name: 'Mashreq Bank', logo: 'MASHREQ' },
+  { name: 'Emirates NBD', logo: 'ENBD.png' },
+  { name: 'Dubai Islamic Bank', logo: 'DIB.png' },
+  { name: 'HSBC Middle East', logo: 'HSBC.png' },
+  { name: 'Mashreq Bank', logo: 'MASHREQ.png' },
 ]
 
 export default function PaymentPlans() {
   const sectionRef = useRef<HTMLElement>(null)
+  const [isCalculatorOpen, setIsCalculatorOpen] = useState(false)
 
   useEffect(() => {
     if (!sectionRef.current) return
@@ -147,11 +151,10 @@ export default function PaymentPlans() {
             return (
               <div
                 key={index}
-                className={`plan-card group relative ${
-                  plan.highlight
-                    ? 'bg-gradient-to-br from-bronze-500/10 via-obsidian-900/90 to-obsidian-950 border-2 border-bronze-500/40 shadow-2xl shadow-bronze-500/10'
-                    : 'bg-obsidian-900/40 border border-bronze-500/10'
-                } hover:border-bronze-500/30 transition-all duration-500`}
+                className={`plan-card group relative ${plan.highlight
+                  ? 'bg-gradient-to-br from-bronze-500/10 via-obsidian-900/90 to-obsidian-950 border-2 border-bronze-500/40 shadow-2xl shadow-bronze-500/10'
+                  : 'bg-obsidian-900/40 border border-bronze-500/10'
+                  } hover:border-bronze-500/30 transition-all duration-500`}
               >
                 {/* Best Value Badge */}
                 {plan.highlight && (
@@ -206,11 +209,10 @@ export default function PaymentPlans() {
 
                   {/* CTA */}
                   <button
-                    className={`w-full py-4 text-sm uppercase tracking-wider transition-all duration-300 ${
-                      plan.highlight
-                        ? 'bg-bronze-500 text-obsidian-950 hover:bg-bronze-400'
-                        : 'border border-bronze-500/30 text-bronze-500 hover:bg-bronze-500/10'
-                    }`}
+                    className={`w-full py-4 text-sm uppercase tracking-wider transition-all duration-300 ${plan.highlight
+                      ? 'bg-bronze-500 text-obsidian-950 hover:bg-bronze-400'
+                      : 'border border-bronze-500/30 text-bronze-500 hover:bg-bronze-500/10'
+                      }`}
                   >
                     Select Plan
                   </button>
@@ -235,11 +237,14 @@ export default function PaymentPlans() {
             {financingPartners.map((partner, index) => (
               <div
                 key={index}
-                className="bank-logo group bg-obsidian-950/60 border border-bronze-500/10 hover:border-bronze-500/30 p-6 lg:p-8 flex items-center justify-center transition-all duration-300 cursor-pointer"
+                className="bank-logo group bg-obsidian-950/60 border border-bronze-500/10 hover:border-bronze-500/30 p-6 lg:p-8 flex items-center justify-center transition-all duration-300 cursor-pointer relative h-24 lg:h-28"
               >
-                <span className="text-lg lg:text-xl font-light text-bronze-500 tracking-[0.15em] group-hover:scale-110 transition-transform duration-300">
-                  {partner.logo}
-                </span>
+                <Image
+                  src={getAssetPath(`/images/logos/${partner.logo}`)}
+                  alt={partner.name}
+                  fill
+                  className="object-contain p-2 opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+                />
               </div>
             ))}
           </div>
@@ -247,7 +252,10 @@ export default function PaymentPlans() {
 
         {/* Calculator CTA */}
         <div className="mt-16 lg:mt-24 text-center">
-          <div className="inline-flex items-center gap-3 bg-bronze-500/10 border border-bronze-500/30 px-8 py-4 cursor-pointer hover:bg-bronze-500/20 transition-all duration-300 group">
+          <div
+            onClick={() => setIsCalculatorOpen(true)}
+            className="inline-flex items-center gap-3 bg-bronze-500/10 border border-bronze-500/30 px-8 py-4 cursor-pointer hover:bg-bronze-500/20 transition-all duration-300 group"
+          >
             <TrendingUp className="w-6 h-6 text-bronze-500 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
             <span className="text-base text-ivory-100 font-light">
               Calculate Your Payment Plan
@@ -258,6 +266,12 @@ export default function PaymentPlans() {
           </p>
         </div>
       </div>
+
+      {/* Mortgage Calculator Modal */}
+      <MortgageCalculator
+        isOpen={isCalculatorOpen}
+        onClose={() => setIsCalculatorOpen(false)}
+      />
     </section>
   )
 }

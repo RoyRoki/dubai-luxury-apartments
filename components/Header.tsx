@@ -6,6 +6,7 @@ import { scrollToElement } from '@/lib/utils'
 import { usePathname, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import type Lenis from '@studio-freight/lenis'
+import ViewingFormCard from './ViewingFormCard'
 
 interface HeaderProps {
   lenisInstance?: RefObject<Lenis | null>
@@ -14,6 +15,7 @@ interface HeaderProps {
 export default function Header({ lenisInstance }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
 
   useEffect(() => {
     // FIXED: Use Lenis scroll event instead of window.addEventListener
@@ -131,7 +133,7 @@ export default function Header({ lenisInstance }: HeaderProps) {
 
         {/* CTA Button - Desktop - FIXED: Hidden on tablet, shown only on large screens */}
         <button
-          onClick={() => handleNavClick('contact')}
+          onClick={() => setIsBookingModalOpen(true)}
           className="hidden lg:flex items-center space-x-2 btn-primary text-sm xl:text-base"
         >
           <Phone size={18} />
@@ -166,7 +168,10 @@ export default function Header({ lenisInstance }: HeaderProps) {
           ))}
           <li className="pt-4 border-t border-bronze-600/20">
             <button
-              onClick={() => handleNavClick('contact')}
+              onClick={() => {
+                setIsBookingModalOpen(true)
+                setIsMobileMenuOpen(false)
+              }}
               className="btn-primary w-full flex items-center justify-center space-x-2"
             >
               <Phone size={18} />
@@ -175,6 +180,19 @@ export default function Header({ lenisInstance }: HeaderProps) {
           </li>
         </ul>
       </div>
+
+      {/* Booking Modal */}
+      {isBookingModalOpen && (
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-obsidian-950/80 backdrop-blur-md transition-opacity duration-300"
+            onClick={() => setIsBookingModalOpen(false)}
+          />
+          <div className="relative w-full max-w-5xl animate-in fade-in zoom-in-95 duration-300">
+            <ViewingFormCard onClose={() => setIsBookingModalOpen(false)} isModal />
+          </div>
+        </div>
+      )}
     </header>
   )
 }

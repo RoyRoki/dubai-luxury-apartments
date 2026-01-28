@@ -1,9 +1,11 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { Maximize2, Bed, Bath, Ruler, Download, Eye, ChevronRight, ChevronLeft } from 'lucide-react'
+import { Maximize2, Bed, Bath, Ruler, Download, Eye, ChevronRight, ChevronLeft, X } from 'lucide-react'
+import { getAssetPath } from '@/lib/utils'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -16,6 +18,7 @@ const floorPlans = [
     price: 'Starting from AED 850K',
     features: ['Open-plan living', 'Fitted kitchen', 'Balcony', 'Smart home ready'],
     available: '12 units',
+    image: '/images/interiors/luxury-bedroom-bright.webp'
   },
   {
     type: '1 Bedroom',
@@ -25,6 +28,7 @@ const floorPlans = [
     price: 'Starting from AED 1.2M',
     features: ['Master bedroom', 'Living & dining', 'Fitted kitchen', 'Balcony', 'Storage room'],
     available: '18 units',
+    image: '/images/interiors/modern-dark-living.webp'
   },
   {
     type: '2 Bedroom',
@@ -35,6 +39,7 @@ const floorPlans = [
     features: ['2 en-suite bedrooms', 'Spacious living', 'Dining area', 'Maid\'s room', 'Large balcony'],
     available: '24 units',
     popular: true,
+    image: '/images/interiors/downtown-views.webp'
   },
   {
     type: '3 Bedroom',
@@ -44,6 +49,7 @@ const floorPlans = [
     price: 'Starting from AED 2.8M',
     features: ['3 en-suite bedrooms', 'Study room', 'Powder room', 'Maid\'s room', 'Terrace'],
     available: '15 units',
+    image: '/images/interiors/marina-suite.webp'
   },
   {
     type: '4 Bedroom',
@@ -53,6 +59,7 @@ const floorPlans = [
     price: 'Starting from AED 4.2M',
     features: ['4 en-suite bedrooms', 'Family room', 'Study', 'Maid\'s room', 'Private terrace'],
     available: '8 units',
+    image: '/images/interiors/chef-kitchen.webp'
   },
   {
     type: 'Penthouse',
@@ -63,6 +70,7 @@ const floorPlans = [
     features: ['5 en-suite bedrooms', 'Private pool', 'Rooftop terrace', 'Private elevator', 'Butler pantry'],
     available: '3 units',
     luxury: true,
+    image: '/images/interiors/grand-lobby.webp'
   },
 ]
 
@@ -70,6 +78,7 @@ export default function FloorPlans() {
   const sectionRef = useRef<HTMLElement>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [activeTab, setActiveTab] = useState(2) // Default to 2BR (most popular)
+  const [isVirtualTourOpen, setIsVirtualTourOpen] = useState(false)
 
   const scroll = (direction: 'left' | 'right') => {
     if (!scrollContainerRef.current) return
@@ -152,12 +161,15 @@ export default function FloorPlans() {
                   {/* Glow effect */}
                   <div className="absolute inset-0 bg-gradient-to-br from-bronze-500/0 via-bronze-500/0 to-bronze-500/0 group-hover:from-bronze-500/5 group-hover:via-bronze-500/10 group-hover:to-bronze-500/5 transition-all duration-500 pointer-events-none" />
 
-                  {/* Floor Plan Placeholder */}
+                  {/* Floor Plan Image */}
                   <div className="relative h-64 bg-obsidian-950/60 border-b border-bronze-500/10 overflow-hidden">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Maximize2 className="w-20 h-20 text-bronze-500/20" strokeWidth={1} />
-                    </div>
-                    <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(192,154,107,0.03)_1px,transparent_1px),linear-gradient(rgba(192,154,107,0.03)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,#000_60%,transparent_100%)]" />
+                    <Image
+                      src={getAssetPath(plan.image)}
+                      alt={`${plan.type} Floor Plan`}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-obsidian-950/80 to-transparent" />
                   </div>
 
                   <div className="relative z-10 p-6 lg:p-8">
@@ -232,11 +244,42 @@ export default function FloorPlans() {
           <p className="text-base text-ivory-400 mb-8 max-w-2xl mx-auto font-light leading-relaxed">
             Take an immersive virtual tour of our floor plans. Walk through each space, visualize the layout, and envision your future home.
           </p>
-          <button className="inline-flex items-center gap-3 px-8 py-4 bg-bronze-500 text-obsidian-950 hover:bg-bronze-400 transition-all duration-300 uppercase tracking-wider text-sm font-medium">
+          <button
+            onClick={() => setIsVirtualTourOpen(true)}
+            className="inline-flex items-center gap-3 px-8 py-4 bg-bronze-500 text-obsidian-950 hover:bg-bronze-400 transition-all duration-300 uppercase tracking-wider text-sm font-medium"
+          >
             Launch Virtual Tour
             <ChevronRight className="w-5 h-5" strokeWidth={2} />
           </button>
         </div>
+
+        {/* Virtual Tour Modal */}
+        {isVirtualTourOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8">
+            {/* Backdrop with blur */}
+            <div
+              className="absolute inset-0 bg-obsidian-950/80 backdrop-blur-md transition-opacity duration-300"
+              onClick={() => setIsVirtualTourOpen(false)}
+            />
+
+            {/* Modal Content */}
+            <div className="relative w-full max-w-7xl aspect-video bg-obsidian-900 rounded-sm overflow-hidden shadow-2xl border border-bronze-500/20 animate-in fade-in zoom-in-95 duration-300">
+              <button
+                onClick={() => setIsVirtualTourOpen(false)}
+                className="absolute top-4 right-4 z-10 p-2 bg-obsidian-950/50 hover:bg-bronze-500 hover:text-obsidian-950 text-ivory-100 rounded-full transition-all duration-300"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
+              <iframe
+                src="https://my.matterport.com/show?play=1&lang=en-US&m=MARFGJFtTjc"
+                className="w-full h-full"
+                allow="fullscreen; vr"
+                title="Virtual Tour"
+              />
+            </div>
+          </div>
+        )}
       </div>
     </section>
   )
