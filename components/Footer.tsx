@@ -35,7 +35,7 @@ export default function Footer() {
               />
             </div>
             <p className="text-ivory-500 font-light leading-relaxed text-sm max-w-xs">
-              Curating the world's most exceptional properties for those who accept nothing less than perfection. A legacy of excellence in Dubai real estate.
+              Curating the world&apos;s most exceptional properties for those who accept nothing less than perfection. A legacy of excellence in Dubai real estate.
             </p>
           </div>
 

@@ -17,7 +17,7 @@ export default function Hero() {
   const frameCount = 300
   const imagesRef = useRef<HTMLImageElement[]>([])
   const [isLoaded, setIsLoaded] = useState(false)
-  const [currentFrame, setCurrentFrame] = useState({ frame: 0 })
+  const currentFrame = useRef({ frame: 0 }) // Changed to useRef
 
   useEffect(() => {
     // 1. Progressive Image Loading
@@ -97,7 +97,7 @@ export default function Hero() {
 
       // Render loop
       const render = () => {
-        const frameIndex = Math.round(currentFrame.frame)
+        const frameIndex = Math.round(currentFrame.current.frame) // Access .current
         const img = imagesRef.current[frameIndex]
 
         if (!context || !img || !img.complete || img.naturalWidth === 0) return
@@ -122,7 +122,7 @@ export default function Hero() {
         canvas.width = window.innerWidth
         canvas.height = window.innerHeight
         // Redraw current frame on resize
-        if (imagesRef.current[Math.round(currentFrame.frame)]) {
+        if (imagesRef.current[Math.round(currentFrame.current.frame)]) { // Access .current
           render()
         }
       }
@@ -137,7 +137,7 @@ export default function Hero() {
         onUpdate: render
       })
 
-      tl.to(currentFrame, {
+      tl.to(currentFrame.current, { // Animate .current
         frame: frameCount - 1,
         duration: duration,
         ease: 'none',
