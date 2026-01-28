@@ -255,7 +255,7 @@ export default function FloorPlans() {
 
         {/* Virtual Tour Modal */}
         {isVirtualTourOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
             {/* Backdrop with blur */}
             <div
               className="absolute inset-0 bg-obsidian-950/80 backdrop-blur-md transition-opacity duration-300"

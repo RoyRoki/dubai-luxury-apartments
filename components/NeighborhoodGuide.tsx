@@ -136,14 +136,14 @@ export default function NeighborhoodGuide() {
                 key={category.id}
                 onClick={() => setActiveCategory(category.id)}
                 className={`group flex items-center gap-3 px-6 py-3 border transition-all duration-300 ${activeCategory === category.id
-                    ? 'bg-bronze-500/20 border-bronze-500/50 text-bronze-500'
-                    : 'bg-obsidian-900/40 border-bronze-500/10 text-ivory-400 hover:border-bronze-500/30'
+                  ? 'bg-bronze-500/20 border-bronze-500/50 text-bronze-500'
+                  : 'bg-obsidian-900/40 border-bronze-500/10 text-ivory-400 hover:border-bronze-500/30'
                   }`}
               >
                 <Icon
                   className={`w-5 h-5 transition-all duration-300 ${activeCategory === category.id
-                      ? 'text-bronze-500 scale-110'
-                      : 'text-ivory-500 group-hover:text-bronze-500'
+                    ? 'text-bronze-500 scale-110'
+                    : 'text-ivory-500 group-hover:text-bronze-500'
                     }`}
                   strokeWidth={1.5}
                 />
@@ -197,17 +197,17 @@ export default function NeighborhoodGuide() {
 
         {/* Transit & Connectivity */}
         <div className="mt-16 lg:mt-24 grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="bg-obsidian-900/40 border border-bronze-500/10 p-8 text-center">
+          <div className="bg-obsidian-950 border border-bronze-500/10 p-8 text-center">
             <Building2 className="w-10 h-10 mx-auto mb-4 text-bronze-500" strokeWidth={1.5} />
             <h4 className="text-lg font-light text-ivory-100 mb-2">Dubai International Airport</h4>
             <p className="text-sm text-ivory-500">15 min drive</p>
           </div>
-          <div className="bg-obsidian-900/40 border border-bronze-500/10 p-8 text-center">
+          <div className="bg-obsidian-950 border border-bronze-500/10 p-8 text-center">
             <MapPin className="w-10 h-10 mx-auto mb-4 text-bronze-500" strokeWidth={1.5} />
             <h4 className="text-lg font-light text-ivory-100 mb-2">Burj Khalifa / Downtown</h4>
             <p className="text-sm text-ivory-500">10 min drive</p>
           </div>
-          <div className="bg-obsidian-900/40 border border-bronze-500/10 p-8 text-center">
+          <div className="bg-obsidian-950 border border-bronze-500/10 p-8 text-center">
             <Theater className="w-10 h-10 mx-auto mb-4 text-bronze-500" strokeWidth={1.5} />
             <h4 className="text-lg font-light text-ivory-100 mb-2">Business Bay Metro</h4>
             <p className="text-sm text-ivory-500">5 min walk</p>

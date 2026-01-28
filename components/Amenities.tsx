@@ -4,6 +4,8 @@ import { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { gsap } from 'gsap'
 
+import { getAssetPath } from '@/lib/utils'
+
 export default function Amenities() {
   const sectionRef = useRef<HTMLElement>(null)
 
@@ -67,25 +69,25 @@ export default function Amenities() {
     {
       title: 'Infinity Pool',
       description: "Weightless mornings. Your infinity pool suspends above the city's pulse, where water meets sky.",
-      image: '/images/amenities/infinity-pool.webp',
+      image: getAssetPath('/images/amenities/infinity-pool.webp'),
       align: 'left',
     },
     {
       title: 'Private Cinema',
       description: 'Cinematic evenings in intimate luxury. Your personal theater awaits, draped in velvet silence.',
-      image: '/images/amenities/private-cinema.webp',
+      image: getAssetPath('/images/amenities/private-cinema.webp'),
       align: 'right',
     },
     {
       title: 'Wellness Sanctuary',
       description: 'Transcend the everyday. Steam, sauna, thermal baths—rituals of renewal, privately yours.',
-      image: '/images/amenities/wellness.webp',
+      image: getAssetPath('/images/amenities/wellness.webp'),
       align: 'left',
     },
     {
       title: 'Sky Terrace',
       description: 'Dusk conversations under desert stars. Your private observatory overlooks a city of infinite light.',
-      image: '/images/amenities/sky-terrace.webp',
+      image: getAssetPath('/images/amenities/sky-terrace.webp'),
       align: 'right',
     },
   ]

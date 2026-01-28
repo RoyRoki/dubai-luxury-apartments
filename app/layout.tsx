@@ -11,19 +11,21 @@ const cormorant = Cormorant_Garamond({
   variable: '--font-cormorant'
 })
 
+import { getAssetPath } from '@/lib/utils'
+
 export const metadata: Metadata = {
   title: 'Dubai Luxury Apartments | Premium Properties in Prime Locations',
   description: 'Discover exclusive luxury apartments in Dubai\'s most prestigious locations - Downtown, Marina, and Palm Jumeirah. Schedule your viewing today.',
   keywords: 'Dubai luxury apartments, premium properties Dubai, Downtown Dubai, Dubai Marina, Palm Jumeirah, luxury real estate',
   icons: {
-    icon: '/logo.webp',
-    shortcut: '/logo.webp',
-    apple: '/logo.webp',
+    icon: getAssetPath('/logo.webp'),
+    shortcut: getAssetPath('/logo.webp'),
+    apple: getAssetPath('/logo.webp'),
   },
   openGraph: {
     title: 'Dubai Luxury Apartments | Premium Properties',
     description: 'Exclusive luxury living in Dubai\'s prime locations',
-    images: ['/logo.png'],
+    images: [getAssetPath('/logo.png')],
   },
 }
 

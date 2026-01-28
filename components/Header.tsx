@@ -3,7 +3,7 @@
 import { useState, useEffect, RefObject } from 'react'
 import { createPortal } from 'react-dom'
 import { Menu, X, Phone } from 'lucide-react'
-import { scrollToElement } from '@/lib/utils'
+import { scrollToElement, getAssetPath } from '@/lib/utils'
 import { usePathname, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import type Lenis from '@studio-freight/lenis'
@@ -109,7 +109,7 @@ export default function Header({ lenisInstance }: HeaderProps) {
         <div className="flex items-center space-x-2 group/logo cursor-pointer" onClick={() => handleNavClick('/')}>
           <div className="relative w-32 h-14 md:w-40 md:h-16 transition-transform duration-500 group-hover/logo:scale-105">
             <Image
-              src="/logo.webp"
+              src={getAssetPath('/logo.webp')}
               alt="Dubai Luxury"
               fill
               className="object-contain" // object-contain to ensure it fits and doesn't crop
