@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import PropertyCard from './PropertyCard'
 import { staggerAnimation } from '@/lib/animations'
+import { getAssetPath } from '@/lib/utils'
 
 export default function FeaturedProperties() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -21,7 +22,7 @@ export default function FeaturedProperties() {
       title: 'Burj Vista Penthouse',
       location: 'Downtown Dubai',
       price: 8500000,
-      image: '/images/exteriors/burj-vista.webp',
+      image: getAssetPath('/images/exteriors/burj-vista.webp'),
       bedrooms: 4,
       bathrooms: 5,
       area: 4500,
@@ -31,7 +32,7 @@ export default function FeaturedProperties() {
       title: 'Palm Jumeirah Villa',
       location: 'Palm Jumeirah',
       price: 12000000,
-      image: '/images/exteriors/palm-jumeirah-villa.webp',
+      image: getAssetPath('/images/exteriors/palm-jumeirah-villa.webp'),
       bedrooms: 6,
       bathrooms: 7,
       area: 8500,
@@ -41,7 +42,7 @@ export default function FeaturedProperties() {
       title: 'Marina Promenade Suite',
       location: 'Dubai Marina',
       price: 3200000,
-      image: '/images/interiors/marina-suite.webp',
+      image: getAssetPath('/images/interiors/marina-suite.webp'),
       bedrooms: 3,
       bathrooms: 3,
       area: 2800,
@@ -51,7 +52,7 @@ export default function FeaturedProperties() {
       title: 'Downtown Views',
       location: 'Downtown Dubai',
       price: 5500000,
-      image: '/images/interiors/downtown-views.webp',
+      image: getAssetPath('/images/interiors/downtown-views.webp'),
       bedrooms: 3,
       bathrooms: 4,
       area: 3100,

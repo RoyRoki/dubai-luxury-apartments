@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { fadeInOnScroll, counterAnimation } from '@/lib/animations'
+import { getAssetPath } from '@/lib/utils'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -104,7 +105,7 @@ export default function Investment() {
           <div className="investment-image lg:col-span-7">
             <div className="relative h-[400px] md:h-[600px] lg:h-[700px] overflow-hidden group">
               <Image
-                src="/images/interiors/downtown-views.webp"
+                src={getAssetPath('/images/interiors/downtown-views.webp')}
                 alt="Luxury Investment Property"
                 fill
                 sizes="(max-width: 1024px) 100vw, 60vw"
