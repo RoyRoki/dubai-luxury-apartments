@@ -123,7 +123,7 @@ export default function NeighborhoodGuide() {
           </h2>
           <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-bronze-500 to-transparent mb-8 opacity-50 mx-auto" />
           <p className="text-base md:text-xl text-ivory-400 font-light leading-relaxed tracking-wide max-w-3xl mx-auto">
-            Everything you need is moments away. From world-class schools to fine dining, your new address puts Dubai's best within effortless reach.
+            Everything you need is moments away. From world-class schools to fine dining, your new address puts Dubai&apos;s best within effortless reach.
           </p>
         </div>
 
@@ -135,18 +135,16 @@ export default function NeighborhoodGuide() {
               <button
                 key={category.id}
                 onClick={() => setActiveCategory(category.id)}
-                className={`group flex items-center gap-3 px-6 py-3 border transition-all duration-300 ${
-                  activeCategory === category.id
+                className={`group flex items-center gap-3 px-6 py-3 border transition-all duration-300 ${activeCategory === category.id
                     ? 'bg-bronze-500/20 border-bronze-500/50 text-bronze-500'
                     : 'bg-obsidian-900/40 border-bronze-500/10 text-ivory-400 hover:border-bronze-500/30'
-                }`}
+                  }`}
               >
                 <Icon
-                  className={`w-5 h-5 transition-all duration-300 ${
-                    activeCategory === category.id
+                  className={`w-5 h-5 transition-all duration-300 ${activeCategory === category.id
                       ? 'text-bronze-500 scale-110'
                       : 'text-ivory-500 group-hover:text-bronze-500'
-                  }`}
+                    }`}
                   strokeWidth={1.5}
                 />
                 <span className="text-sm uppercase tracking-wider">{category.name}</span>

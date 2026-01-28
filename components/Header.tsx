@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, RefObject } from 'react'
+import { createPortal } from 'react-dom'
 import { Menu, X, Phone } from 'lucide-react'
 import { scrollToElement } from '@/lib/utils'
 import { usePathname, useRouter } from 'next/navigation'
@@ -182,16 +183,22 @@ export default function Header({ lenisInstance }: HeaderProps) {
       </div>
 
       {/* Booking Modal */}
-      {isBookingModalOpen && (
-        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-obsidian-950/80 backdrop-blur-md transition-opacity duration-300"
-            onClick={() => setIsBookingModalOpen(false)}
-          />
-          <div className="relative w-full max-w-5xl animate-in fade-in zoom-in-95 duration-300">
-            <ViewingFormCard onClose={() => setIsBookingModalOpen(false)} isModal />
+      {isBookingModalOpen && typeof document !== 'undefined' && createPortal(
+        <div
+          className="fixed inset-0 bg-obsidian-950/80 backdrop-blur-md overflow-y-auto"
+          style={{ zIndex: 9999 }}
+          onClick={() => setIsBookingModalOpen(false)}
+        >
+          <div className="min-h-screen flex items-center justify-center p-4 py-8">
+            <div
+              className="relative w-full max-w-5xl animate-in fade-in zoom-in-95 duration-300"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ViewingFormCard onClose={() => setIsBookingModalOpen(false)} isModal />
+            </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </header>
   )

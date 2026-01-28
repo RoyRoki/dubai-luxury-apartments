@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useLayoutEffect } from 'react'
 import Image from 'next/image'
 import { fadeInOnScroll, counterAnimation } from '@/lib/animations'
 import { getAssetPath } from '@/lib/utils'
@@ -10,106 +10,69 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 export default function Investment() {
   const sectionRef = useRef<HTMLElement>(null)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
 
-    gsap.registerPlugin(ScrollTrigger)
-
-    // Animations removed to ensure visibility
-
-    // Counter animations for main stats (5.8%, 0.0%, 15.0%)
-    const statCounters = document.querySelectorAll('.stat-counter')
-    statCounters.forEach((counter, index) => {
-      const target = parseFloat(counter.getAttribute('data-target') || '0')
-      const isDecimal = counter.getAttribute('data-decimal') === 'true'
-
-      const obj = { value: 0 }
-
-      // Animate the number counting up
-      gsap.to(obj, {
-        value: target,
-        duration: 3, // Longer duration for more visible counting
-        ease: 'power3.out', // Smoother ease
-        scrollTrigger: {
-          trigger: counter,
-          start: 'top 75%', // Trigger slightly earlier
-          toggleActions: 'play none none reset', // Reset on scroll back
-          once: false, // Allow replay
-        },
-        onUpdate: () => {
-          counter.textContent = isDecimal
-            ? obj.value.toFixed(1)
-            : Math.round(obj.value).toString()
-        },
-      })
-
-      // Add subtle scale pulse effect during counting
-      gsap.fromTo(counter,
-        { scale: 0.95, opacity: 0.5 },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 1.5,
-          ease: 'back.out(1.2)',
-          scrollTrigger: {
-            trigger: counter,
-            start: 'top 75%',
-            toggleActions: 'play none none reset',
-            once: false,
-          }
-        }
-      )
-    })
-
-    // Counter animations for bottom stats ($2.3B, 200+, 10 Years)
-    const bottomCounters = document.querySelectorAll('.bottom-stat-counter')
-    bottomCounters.forEach((counter) => {
-      const text = counter.getAttribute('data-text') || ''
-      const numMatch = text.match(/[\d.]+/)
-      if (numMatch) {
-        const target = parseFloat(numMatch[0])
-        const prefix = text.split(numMatch[0])[0]
-        const suffix = text.split(numMatch[0])[1]
+    const ctx = gsap.context(() => {
+      // Counter animations for main stats (5.8%, 0.0%, 15.0%)
+      const statCounters = document.querySelectorAll('.stat-counter')
+      statCounters.forEach((counter) => {
+        const target = parseFloat(counter.getAttribute('data-target') || '0')
+        const isDecimal = counter.getAttribute('data-decimal') === 'true'
 
         const obj = { value: 0 }
 
         // Animate the number counting up
         gsap.to(obj, {
           value: target,
-          duration: 3, // Longer duration for more visible counting
-          ease: 'power3.out', // Smoother ease
+          duration: 2.5,
+          ease: 'power2.out',
           scrollTrigger: {
             trigger: counter,
-            start: 'top 80%', // Trigger when section is more visible
-            toggleActions: 'play none none reset', // Reset on scroll back
-            once: false, // Allow replay
+            start: 'top 85%', // Trigger earlier to be visible sooner
+            toggleActions: 'play none none none', // Play once and stay
           },
           onUpdate: () => {
-            const displayValue = suffix.includes('.') || text.includes('.')
+            counter.textContent = isDecimal
               ? obj.value.toFixed(1)
               : Math.round(obj.value).toString()
-            counter.textContent = `${prefix}${displayValue}${suffix}`
           },
         })
+      })
 
-        // Add subtle scale pulse effect during counting
-        gsap.fromTo(counter,
-          { scale: 0.95, opacity: 0.5 },
-          {
-            scale: 1,
-            opacity: 1,
-            duration: 1.5,
-            ease: 'back.out(1.2)',
+      // Counter animations for bottom stats ($2.3B, 200+, 10 Years)
+      const bottomCounters = document.querySelectorAll('.bottom-stat-counter')
+      bottomCounters.forEach((counter) => {
+        const text = counter.getAttribute('data-text') || ''
+        const numMatch = text.match(/[\d.]+/)
+        if (numMatch) {
+          const target = parseFloat(numMatch[0])
+          const prefix = text.split(numMatch[0])[0]
+          const suffix = text.split(numMatch[0])[1]
+
+          const obj = { value: 0 }
+
+          gsap.to(obj, {
+            value: target,
+            duration: 2.5,
+            ease: 'power2.out',
             scrollTrigger: {
               trigger: counter,
-              start: 'top 80%',
-              toggleActions: 'play none none reset',
-              once: false,
-            }
-          }
-        )
-      }
-    })
+              start: 'top 90%',
+              toggleActions: 'play none none none',
+            },
+            onUpdate: () => {
+              const displayValue = suffix.includes('.') || text.includes('.')
+                ? obj.value.toFixed(1)
+                : Math.round(obj.value).toString()
+              counter.textContent = `${prefix}${displayValue}${suffix}`
+            },
+          })
+        }
+      })
+    }, sectionRef) // Scope to sectionRef
+
+    return () => ctx.revert() // Cleanup
   }, [])
 
   const stats = [

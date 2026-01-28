@@ -229,7 +229,7 @@ export default function PaymentPlans() {
               Financing Partners
             </h3>
             <p className="text-base text-ivory-400 font-light max-w-2xl mx-auto">
-              We work with the region's most trusted financial institutions to offer competitive mortgage rates and flexible terms.
+              We work with the region&apos;s most trusted financial institutions to offer competitive mortgage rates and flexible terms.
             </p>
           </div>
 

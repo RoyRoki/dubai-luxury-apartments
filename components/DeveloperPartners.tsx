@@ -108,7 +108,7 @@ export default function DeveloperPartners() {
           </h2>
           <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-bronze-500 to-transparent mb-8 opacity-50 mx-auto" />
           <p className="text-base md:text-xl text-ivory-400 font-light leading-relaxed tracking-wide max-w-3xl mx-auto">
-            We collaborate with Dubai's most prestigious developers—names synonymous with excellence, innovation, and uncompromising quality.
+            We collaborate with Dubai&apos;s most prestigious developers—names synonymous with excellence, innovation, and uncompromising quality.
           </p>
         </div>
 

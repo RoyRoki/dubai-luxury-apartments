@@ -3,6 +3,8 @@
 import { useRef } from 'react'
 import Image from 'next/image'
 
+import { getAssetPath } from '@/lib/utils'
+
 export default function Location() {
   const sectionRef = useRef<HTMLElement>(null)
 
@@ -33,7 +35,7 @@ export default function Location() {
   ]
 
   return (
-    <section ref={sectionRef} className="section bg-obsidian-900" id="location">
+    <section ref={sectionRef} className="section bg-obsidian-900 min-h-screen flex flex-col justify-center relative overflow-hidden z-30" id="location">
       <div className="container-editorial">
         {/* Section Header */}
         <div className="text-center mb-20 md:mb-28">
@@ -56,7 +58,7 @@ export default function Location() {
           <div className="location-content lg:col-span-7">
             <div className="relative h-[400px] md:h-[500px] lg:h-[700px] overflow-hidden group">
               <Image
-                src="/images/location/dubai-skyline.webp"
+                src={getAssetPath('/images/location/dubai-skyline.webp')}
                 alt="Dubai Skyline"
                 fill
                 sizes="(max-width: 1024px) 100vw, 60vw"

@@ -139,6 +139,7 @@ export default function Home() {
           curveVariant='geometric-sharp'
           lazyLoad={true}
           nextSectionBg="obsidian-950"
+          className="z-40"
         />
 
         <NeighborhoodGuide />
@@ -194,17 +195,6 @@ export default function Home() {
           lazyLoad={true}
           nextSectionBg="obsidian-950"
         />
-
-        {/* 10. Your Daily Return
-        <ScrollSequence
-          sequenceName="A_seamless_firstperson_202601272342"
-          title="Your Daily Return"
-          subtitle="The journey home has never felt this transcendent"
-          frameCount={120}
-          curveVariant='wave-top'
-          lazyLoad={true}
-          nextSectionBg="obsidian-950"
-        /> */}
 
         <FAQ />
 

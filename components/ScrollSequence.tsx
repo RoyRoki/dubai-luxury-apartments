@@ -16,6 +16,7 @@ interface ScrollSequenceProps {
     textColor?: 'light' | 'dark' | 'gold'
     lazyLoad?: boolean // Load images only when section is near viewport
     nextSectionBg?: 'obsidian-950' | 'obsidian-900' // Background color of next section for bottom curves
+    className?: string
 }
 
 export default function ScrollSequence({
@@ -27,6 +28,7 @@ export default function ScrollSequence({
     textColor = 'light',
     lazyLoad = false,
     nextSectionBg = 'obsidian-900',
+    className = '',
 }: ScrollSequenceProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -209,7 +211,7 @@ export default function ScrollSequence({
     }
 
     return (
-        <div ref={containerRef} className="relative h-[100vh] w-full bg-obsidian-950 z-20" id="experience">
+        <div ref={containerRef} className={`relative h-[100vh] w-full bg-obsidian-950 z-20 ${className}`} id="experience">
             <canvas
                 ref={canvasRef}
                 className="absolute inset-0 w-full h-full object-cover"
