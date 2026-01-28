@@ -32,7 +32,7 @@ export default function Hero() {
           for (let i = start; i <= end; i++) {
             const img = new window.Image()
             const filename = i.toString().padStart(4, '0')
-            img.src = `/images/sequence/hero-bg-webp/${filename}.webp` // Updated path
+            img.src = getAssetPath(`/images/sequence/hero-bg-webp/${filename}.webp`) // Updated path with helper
 
             // Store image in array index (0-based)
             const index = i - 1

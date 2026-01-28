@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { getAssetPath } from '@/lib/utils'
 
 import { motion } from 'framer-motion'
 
@@ -30,7 +31,7 @@ export default function ScrollSequence({
 
     // Configuration
     const padNumber = useCallback((n: number) => n.toString().padStart(4, '0'), [])
-    const getFrameUrl = useCallback((index: number) => `/images/sequence/${sequenceName}/frame_${padNumber(index + 1)}.webp`, [sequenceName, padNumber])
+    const getFrameUrl = useCallback((index: number) => getAssetPath(`/images/sequence/${sequenceName}/frame_${padNumber(index + 1)}.webp`), [sequenceName, padNumber])
 
     useEffect(() => {
         // Preload images

@@ -40,3 +40,12 @@ export function isInViewport(element: HTMLElement): boolean {
     rect.right <= (window.innerWidth || document.documentElement.clientWidth)
   )
 }
+
+/**
+ * Get correct asset path for production
+ */
+export function getAssetPath(path: string): string {
+  const isProd = process.env.NODE_ENV === 'production'
+  const basePath = isProd ? '/dubai-luxury-apartments' : ''
+  return `${basePath}${path.startsWith('/') ? path : `/${path}`}`
+}

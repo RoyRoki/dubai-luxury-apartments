@@ -3,6 +3,7 @@
 import { useState, FormEvent, FocusEvent, useRef, useEffect } from 'react'
 import { CheckCircle } from 'lucide-react'
 import { gsap } from 'gsap'
+import { getAssetPath } from '@/lib/utils'
 
 export default function ViewingForm() {
   const [formData, setFormData] = useState({
@@ -162,7 +163,7 @@ export default function ViewingForm() {
             {/* Image */}
             <div
               className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105"
-              style={{ backgroundImage: "url('/images/interiors/modern-dark-living.webp')" }}
+              style={{ backgroundImage: `url('${getAssetPath('/images/interiors/modern-dark-living.webp')}')` }}
             />
 
             {/* Content overlay */}
