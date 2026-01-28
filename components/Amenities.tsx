@@ -3,7 +3,6 @@
 import { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { gsap } from 'gsap'
-import { fadeInOnScroll } from '@/lib/animations'
 
 export default function Amenities() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -14,11 +13,18 @@ export default function Amenities() {
       // Select items within this context (scoped to sectionRef)
       const items = document.querySelectorAll('.amenity-item')
       items.forEach((item, index) => {
-        // Scroll Reveal
-        fadeInOnScroll(item, {
-          y: 80,
-          duration: 1.4,
-          delay: index * 0.2 // Manual stagger
+        // Simple fade in animation (removed problematic fadeInOnScroll)
+        gsap.from(item, {
+          opacity: 0,
+          y: 40,
+          duration: 1,
+          delay: index * 0.15,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: item,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          }
         })
 
         const image = item.querySelector('img')

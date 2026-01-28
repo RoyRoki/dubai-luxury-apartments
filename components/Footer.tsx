@@ -2,7 +2,6 @@
 
 import { Instagram, Linkedin } from 'lucide-react'
 import Image from 'next/image'
-import { getAssetPath } from '@/lib/utils'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -29,7 +28,7 @@ export default function Footer() {
           <div className="space-y-6">
             <div className="relative w-32 h-16 -ml-2">
               <Image
-                src={getAssetPath('/logo.webp')}
+                src="/logo.webp"
                 alt="Dubai Luxury"
                 fill
                 className="object-contain" // object-contain to ensure it fits and doesn't crop

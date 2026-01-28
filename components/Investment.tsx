@@ -17,21 +17,24 @@ export default function Investment() {
 
     // Animations removed to ensure visibility
 
-    // Counter animations for main stats
+    // Counter animations for main stats (5.8%, 0.0%, 15.0%)
     const statCounters = document.querySelectorAll('.stat-counter')
     statCounters.forEach((counter, index) => {
       const target = parseFloat(counter.getAttribute('data-target') || '0')
       const isDecimal = counter.getAttribute('data-decimal') === 'true'
 
       const obj = { value: 0 }
+
+      // Animate the number counting up
       gsap.to(obj, {
         value: target,
-        duration: 2.5,
-        ease: 'power2.out',
+        duration: 3, // Longer duration for more visible counting
+        ease: 'power3.out', // Smoother ease
         scrollTrigger: {
           trigger: counter,
-          start: 'top 80%',
-          toggleActions: 'play none none none',
+          start: 'top 75%', // Trigger slightly earlier
+          toggleActions: 'play none none reset', // Reset on scroll back
+          once: false, // Allow replay
         },
         onUpdate: () => {
           counter.textContent = isDecimal
@@ -39,9 +42,26 @@ export default function Investment() {
             : Math.round(obj.value).toString()
         },
       })
+
+      // Add subtle scale pulse effect during counting
+      gsap.fromTo(counter,
+        { scale: 0.95, opacity: 0.5 },
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 1.5,
+          ease: 'back.out(1.2)',
+          scrollTrigger: {
+            trigger: counter,
+            start: 'top 75%',
+            toggleActions: 'play none none reset',
+            once: false,
+          }
+        }
+      )
     })
 
-    // Counter animations for bottom stats
+    // Counter animations for bottom stats ($2.3B, 200+, 10 Years)
     const bottomCounters = document.querySelectorAll('.bottom-stat-counter')
     bottomCounters.forEach((counter) => {
       const text = counter.getAttribute('data-text') || ''
@@ -52,14 +72,17 @@ export default function Investment() {
         const suffix = text.split(numMatch[0])[1]
 
         const obj = { value: 0 }
+
+        // Animate the number counting up
         gsap.to(obj, {
           value: target,
-          duration: 2.5,
-          ease: 'power2.out',
+          duration: 3, // Longer duration for more visible counting
+          ease: 'power3.out', // Smoother ease
           scrollTrigger: {
             trigger: counter,
-            start: 'top 85%',
-            toggleActions: 'play none none none',
+            start: 'top 80%', // Trigger when section is more visible
+            toggleActions: 'play none none reset', // Reset on scroll back
+            once: false, // Allow replay
           },
           onUpdate: () => {
             const displayValue = suffix.includes('.') || text.includes('.')
@@ -68,6 +91,23 @@ export default function Investment() {
             counter.textContent = `${prefix}${displayValue}${suffix}`
           },
         })
+
+        // Add subtle scale pulse effect during counting
+        gsap.fromTo(counter,
+          { scale: 0.95, opacity: 0.5 },
+          {
+            scale: 1,
+            opacity: 1,
+            duration: 1.5,
+            ease: 'back.out(1.2)',
+            scrollTrigger: {
+              trigger: counter,
+              start: 'top 80%',
+              toggleActions: 'play none none reset',
+              once: false,
+            }
+          }
+        )
       }
     })
   }, [])

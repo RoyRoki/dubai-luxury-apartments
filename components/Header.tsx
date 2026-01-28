@@ -2,7 +2,7 @@
 
 import { useState, useEffect, RefObject } from 'react'
 import { Menu, X, Phone } from 'lucide-react'
-import { scrollToElement, getAssetPath } from '@/lib/utils'
+import { scrollToElement } from '@/lib/utils'
 import { usePathname, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import type Lenis from '@studio-freight/lenis'
@@ -48,7 +48,7 @@ export default function Header({ lenisInstance }: HeaderProps) {
 
   const navLinks: NavLink[] = [
     { name: 'Properties', href: 'properties' },
-    { name: 'Amenities', href: 'amenities' },
+    { name: 'Developers', href: 'developers' },
     { name: 'Location', href: 'location' },
     { name: 'Investment', href: 'investment' },
     { name: 'FAQ', href: 'faq' },
@@ -57,6 +57,22 @@ export default function Header({ lenisInstance }: HeaderProps) {
   const handleNavClick = (href: string, isPage = false) => {
     if (isPage) {
       router.push(`/${href}`)
+      setIsMobileMenuOpen(false)
+      return
+    }
+
+    // Handle home/logo click - scroll to top
+    if (href === '/' || href === '') {
+      if (pathname !== '/') {
+        router.push('/')
+      } else if (lenisInstance?.current) {
+        lenisInstance.current.scrollTo(0, {
+          duration: 1.5,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        })
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
       setIsMobileMenuOpen(false)
       return
     }
@@ -90,7 +106,7 @@ export default function Header({ lenisInstance }: HeaderProps) {
         <div className="flex items-center space-x-2 group/logo cursor-pointer" onClick={() => handleNavClick('/')}>
           <div className="relative w-32 h-14 md:w-40 md:h-16 transition-transform duration-500 group-hover/logo:scale-105">
             <Image
-              src={getAssetPath('/logo.webp')}
+              src="/logo.webp"
               alt="Dubai Luxury"
               fill
               className="object-contain" // object-contain to ensure it fits and doesn't crop

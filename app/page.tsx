@@ -18,6 +18,11 @@ import ViewingForm from '@/components/ViewingForm'
 import Footer from '@/components/Footer'
 import LuxuryCursor from '@/components/LuxuryCursor'
 import EditorialSection from '@/components/EditorialSection'
+import CuratedInteriorsSection from '@/components/CuratedInteriorsSection'
+import DeveloperPartners from '@/components/DeveloperPartners'
+import PaymentPlans from '@/components/PaymentPlans'
+import FloorPlans from '@/components/FloorPlans'
+import NeighborhoodGuide from '@/components/NeighborhoodGuide'
 
 export default function Home() {
   const lenisRef = useRef<Lenis | null>(null)
@@ -52,7 +57,7 @@ export default function Home() {
     // CRITICAL: Ensure ScrollTrigger refreshes after everything loads
     setTimeout(() => {
       ScrollTrigger.refresh()
-    }, 500)
+    }, 1000)
 
     gsap.ticker.lagSmoothing(0)
 
@@ -79,11 +84,13 @@ export default function Home() {
           title="The Genesis"
           subtitle="From ink and imagination to architectural poetry"
           frameCount={120}
-          curveVariant="asymmetric"
-
+          curveVariant="wave-flow"
+          nextSectionBg="obsidian-900"
         />
 
         <FeaturedProperties />
+
+        <DeveloperPartners />
 
         {/* 2. The Blueprint */}
         <ScrollSequence
@@ -91,14 +98,11 @@ export default function Home() {
           title="The Blueprint"
           subtitle="Where vision meets precision"
           frameCount={120}
-          curveVariant='diagonal'
+          curveVariant='geometric-sharp'
+          nextSectionBg="obsidian-950"
         />
 
-        <EditorialSection
-          title="Design Philosophy"
-          subtitle="Architectural Integrity"
-          description="We believe that true luxury lies in the unseen details. Every line, every texture, every shadow is meticulously calculated to create a symphony of form and function."
-        />
+        <PaymentPlans />
 
         {/* 3. Time's Embrace */}
         <ScrollSequence
@@ -106,8 +110,9 @@ export default function Home() {
           title="Time's Embrace"
           subtitle="Witness raw earth sculpted into timeless luxury"
           frameCount={120}
-          curveVariant="stepped-top"
+          curveVariant="layered-depth"
           textColor="dark"
+          nextSectionBg="obsidian-950"
         />
 
         <Investment />
@@ -118,59 +123,66 @@ export default function Home() {
           title="The Arrival"
           subtitle="Step into a world of uncompromised elegance"
           frameCount={120}
-          curveVariant='diagonal'
+          curveVariant='wave-top'
+          lazyLoad={true}
+          nextSectionBg="obsidian-950"
         />
 
         <Location />
 
-        {/* 5. Inner Sanctum */}
-        <ScrollSequence
-          sequenceName="Dubai_Luxury_Interior_Drone_Reveal"
-          title="Inner Sanctum"
-          subtitle="A private retreat above the clouds"
-          frameCount={120}
-          curveVariant='stepped'
-        />
-
-        <Amenities />
-
-        {/* 6. Your Constellation */}
-        <ScrollSequence
-          sequenceName="Dubai_Hyper_Zoom_To_Home"
-          title="Your Constellation"
-          subtitle="In a city of millions, only one address calls to you"
-          frameCount={120}
-        />
-
-        <EditorialSection
-          title="The Vision"
-          subtitle="Beyond Boundaries"
-          description="Dubai is a canvas of dreams. Our residences are the brushstrokes that define its skyline, offering a perspective that is exclusively yours."
-        />
-
-        {/* 7. The Mirror Moment */}
-        <ScrollSequence
-          sequenceName="Reflective_Reveal_Video_Generation"
-          title="The Mirror Moment"
-          subtitle="Beauty reflecting beauty—infinity in every surface"
-          frameCount={120}
-        />
-
-        <Testimonials />
-
-        {/* 8. Sky-High Haven */}
+        {/* 5. Sky-High Haven */}
         <ScrollSequence
           sequenceName="Drone_Portal_to_Luxury_Suite"
           title="Sky-High Haven"
           subtitle="Elevated living, redefined"
           frameCount={120}
+          curveVariant='geometric-sharp'
+          lazyLoad={true}
+          nextSectionBg="obsidian-950"
         />
 
-        <EditorialSection
-          title="Sky Living"
-          subtitle="Elevated Existence"
-          description="Life at the top is different. The air is crisper, the silence deeper, and the horizon infinite. Welcome to your sanctuary in the clouds."
+        <NeighborhoodGuide />
+
+        {/* 6. Inner Sanctum */}
+        <ScrollSequence
+          sequenceName="Dubai_Luxury_Interior_Drone_Reveal"
+          title="Inner Sanctum"
+          subtitle="A private retreat above the clouds"
+          frameCount={120}
+          curveVariant='geometric-top'
+          lazyLoad={true}
+          nextSectionBg="obsidian-900"
         />
+
+        <Amenities />
+
+        <FloorPlans />
+
+        {/* 7. Your Constellation */}
+        <ScrollSequence
+          sequenceName="Dubai_Hyper_Zoom_To_Home"
+          title="Your Constellation"
+          subtitle="In a city of millions, only one address calls to you"
+          frameCount={120}
+          curveVariant='layered-top'
+          lazyLoad={true}
+          nextSectionBg="obsidian-950"
+        />
+
+        <Testimonials />
+
+        {/* 8. The Mirror Moment */}
+        <ScrollSequence
+          sequenceName="Reflective_Reveal_Video_Generation"
+          title="The Mirror Moment"
+          subtitle="Beauty reflecting beauty—infinity in every surface"
+          frameCount={120}
+          curveVariant='wave-flow'
+          lazyLoad={true}
+          nextSectionBg="obsidian-950"
+        />
+
+        <CuratedInteriorsSection />
 
         {/* 9. Living Art */}
         <ScrollSequence
@@ -178,21 +190,21 @@ export default function Home() {
           title="Living Art"
           subtitle="Curated spaces that breathe and inspire"
           frameCount={120}
+          curveVariant='layered-depth'
+          lazyLoad={true}
+          nextSectionBg="obsidian-950"
         />
 
-        <EditorialSection
-          title="Curated Interiors"
-          subtitle="Bespoke Design"
-          description="Interiors that are not just furnished, but curated. A seamless blend of art, comfort, and technology designed to anticipate your every need."
-        />
-
-        {/* 10. Your Daily Return */}
+        {/* 10. Your Daily Return
         <ScrollSequence
           sequenceName="A_seamless_firstperson_202601272342"
           title="Your Daily Return"
           subtitle="The journey home has never felt this transcendent"
           frameCount={120}
-        />
+          curveVariant='wave-top'
+          lazyLoad={true}
+          nextSectionBg="obsidian-950"
+        /> */}
 
         <FAQ />
 
@@ -202,7 +214,9 @@ export default function Home() {
           title="The Golden Hours"
           subtitle="Morning coffee to midnight reflection—your sanctuary evolves"
           frameCount={120}
-
+          curveVariant='layered-depth'
+          lazyLoad={true}
+          nextSectionBg="obsidian-950"
         />
 
         <div className="container-custom px-4 md:px-6 lg:px-8 py-20 lg:py-32" id="contact">

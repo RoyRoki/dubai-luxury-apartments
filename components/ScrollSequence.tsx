@@ -12,8 +12,10 @@ interface ScrollSequenceProps {
     title?: string
     subtitle?: string
     frameCount?: number
-    curveVariant?: 'asymmetric' | 'diagonal' | 'stepped' | 'stepped-top' | 'none'
+    curveVariant?: 'asymmetric' | 'diagonal' | 'stepped' | 'stepped-top' | 'wave-flow' | 'geometric-sharp' | 'layered-depth' | 'wave-top' | 'geometric-top' | 'layered-top' | 'none'
     textColor?: 'light' | 'dark' | 'gold'
+    lazyLoad?: boolean // Load images only when section is near viewport
+    nextSectionBg?: 'obsidian-950' | 'obsidian-900' // Background color of next section for bottom curves
 }
 
 export default function ScrollSequence({
@@ -23,17 +25,45 @@ export default function ScrollSequence({
     frameCount = 120,
     curveVariant = 'none',
     textColor = 'light',
+    lazyLoad = false,
+    nextSectionBg = 'obsidian-900',
 }: ScrollSequenceProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const [images, setImages] = useState<HTMLImageElement[]>([])
     const [isLoading, setIsLoading] = useState(true)
+    const [isInView, setIsInView] = useState(!lazyLoad) // If not lazy, start as "in view"
 
     // Configuration
     const padNumber = useCallback((n: number) => n.toString().padStart(4, '0'), [])
     const getFrameUrl = useCallback((index: number) => getAssetPath(`/images/sequence/${sequenceName}/frame_${padNumber(index + 1)}.webp`), [sequenceName, padNumber])
 
+    // Intersection Observer for lazy loading
     useEffect(() => {
+        if (!lazyLoad || !containerRef.current) return
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setIsInView(true)
+                    }
+                })
+            },
+            {
+                rootMargin: '50% 0px 50% 0px', // Start loading when section is 50vh before entering viewport
+                threshold: 0
+            }
+        )
+
+        observer.observe(containerRef.current)
+
+        return () => observer.disconnect()
+    }, [lazyLoad])
+
+    useEffect(() => {
+        if (!isInView) return // Don't load until in view (or not lazy loading)
+
         // Preload images
         const loadImages = async () => {
             const loadedImages: HTMLImageElement[] = []
@@ -58,7 +88,7 @@ export default function ScrollSequence({
         }
 
         loadImages()
-    }, [getFrameUrl, frameCount])
+    }, [getFrameUrl, frameCount, isInView])
 
     useEffect(() => {
         if (isLoading || !canvasRef.current || !containerRef.current || images.length === 0) return
@@ -122,9 +152,12 @@ export default function ScrollSequence({
                 scrollTrigger: {
                     trigger: containerRef.current,
                     start: 'top top',
-                    end: '+=400%', // Scroll distance (4x screen height)
+                    end: '+=150%', // 1.5x viewport height for proper pinning duration
                     scrub: 0.5,
                     pin: true,
+                    pinSpacing: true,
+                    anticipatePin: 1,
+                    invalidateOnRefresh: true,
                     onUpdate: (self) => renderFrame(obj.frame),
                 },
             })
@@ -150,8 +183,8 @@ export default function ScrollSequence({
                 y: -50,
                 scrollTrigger: {
                     trigger: containerRef.current,
-                    start: '+=300%',
-                    end: '+=400%',
+                    start: 'top+=100% top',
+                    end: 'top+=130% top',
                     scrub: 1,
                 }
             })
@@ -199,7 +232,7 @@ export default function ScrollSequence({
                 <div className="absolute bottom-0 left-0 w-full z-30 translate-y-[1px] pointer-events-none">
                     <svg
                         viewBox="0 0 1440 120"
-                        className="w-full h-[80px] md:h-[120px] fill-obsidian-900 block"
+                        className={`w-full h-[80px] md:h-[120px] fill-${nextSectionBg} block`}
                         preserveAspectRatio="none"
                     >
                         <path d="M0,0 C240,120 480,120 720,60 C960,0 1200,0 1440,60 V120 H0 Z" />
@@ -253,6 +286,156 @@ export default function ScrollSequence({
                         <path
                             d="M1440,80 L1080,80 L1080,40 L720,40 L720,80 L360,80 L360,40 L0,40"
                             className="fill-none stroke-bronze-500 stroke-[3px]"
+                        />
+                    </svg>
+                </div>
+            )}
+
+            {/* Wave Flow - Bottom (Organic smooth waves) */}
+            {curveVariant === 'wave-flow' && (
+                <div className="absolute bottom-0 left-0 w-full z-30 translate-y-[1px] pointer-events-none">
+                    <svg
+                        viewBox="0 0 1440 120"
+                        className={`w-full h-[80px] md:h-[120px] fill-${nextSectionBg} block`}
+                        preserveAspectRatio="none"
+                    >
+                        <path d="M0,40 C120,80 240,80 360,60 C480,40 600,20 720,40 C840,60 960,80 1080,60 C1200,40 1320,20 1440,40 L1440,120 L0,120 Z" />
+                        <path
+                            d="M0,40 C120,80 240,80 360,60 C480,40 600,20 720,40 C840,60 960,80 1080,60 C1200,40 1320,20 1440,40"
+                            className="fill-none stroke-bronze-500 stroke-[2px] opacity-60"
+                        />
+                    </svg>
+                </div>
+            )}
+
+            {/* Geometric Sharp - Bottom (Angular modern cuts) */}
+            {curveVariant === 'geometric-sharp' && (
+                <div className="absolute bottom-0 left-0 w-full z-30 translate-y-[1px] pointer-events-none">
+                    <svg
+                        viewBox="0 0 1440 120"
+                        className={`w-full h-[80px] md:h-[120px] fill-${nextSectionBg} block`}
+                        preserveAspectRatio="none"
+                    >
+                        <path d="M0,60 L240,20 L480,70 L720,30 L960,80 L1200,40 L1440,70 L1440,120 L0,120 Z" />
+                        <path
+                            d="M0,60 L240,20 L480,70 L720,30 L960,80 L1200,40 L1440,70"
+                            className="fill-none stroke-bronze-500 stroke-[3px]"
+                        />
+                    </svg>
+                </div>
+            )}
+
+            {/* Layered Depth - Bottom (Multiple overlapping curves with depth) */}
+            {curveVariant === 'layered-depth' && (
+                <div className="absolute bottom-0 left-0 w-full z-30 translate-y-[1px] pointer-events-none">
+                    <svg
+                        viewBox="0 0 1440 120"
+                        className="w-full h-[100px] md:h-[140px] block"
+                        preserveAspectRatio="none"
+                    >
+                        {/* Back layer */}
+                        <path
+                            d="M0,80 Q360,40 720,80 T1440,80 L1440,120 L0,120 Z"
+                            className={`fill-${nextSectionBg} opacity-50`}
+                        />
+                        {/* Middle layer */}
+                        <path
+                            d="M0,60 Q360,30 720,60 T1440,60 L1440,120 L0,120 Z"
+                            className={`fill-${nextSectionBg} opacity-75`}
+                        />
+                        {/* Front layer */}
+                        <path
+                            d="M0,40 Q360,20 720,40 T1440,40 L1440,120 L0,120 Z"
+                            className={`fill-${nextSectionBg}`}
+                        />
+                        {/* Bronze accent lines */}
+                        <path
+                            d="M0,40 Q360,20 720,40 T1440,40"
+                            className="fill-none stroke-bronze-500 stroke-[2px] opacity-80"
+                        />
+                        <path
+                            d="M0,60 Q360,30 720,60 T1440,60"
+                            className="fill-none stroke-bronze-500 stroke-[2px] opacity-40"
+                        />
+                    </svg>
+                </div>
+            )}
+
+            {/* Wave Top (Organic smooth waves at top) */}
+            {curveVariant === 'wave-top' && (
+                <div className="absolute top-0 left-0 w-full z-30 translate-y-[-1px] pointer-events-none">
+                    <svg
+                        viewBox="0 0 1440 120"
+                        className="w-full h-[80px] md:h-[120px] block"
+                        preserveAspectRatio="none"
+                    >
+                        {/* Fill shape */}
+                        <path
+                            d="M0,0 L1440,0 L1440,80 C1320,100 1200,100 1080,80 C960,60 840,40 720,60 C600,80 480,100 360,80 C240,60 120,40 0,60 Z"
+                            className={`fill-${nextSectionBg}`}
+                        />
+                        {/* Bronze accent line */}
+                        <path
+                            d="M1440,80 C1320,100 1200,100 1080,80 C960,60 840,40 720,60 C600,80 480,100 360,80 C240,60 120,40 0,60"
+                            className="fill-none stroke-bronze-500 stroke-[2px] opacity-60"
+                        />
+                    </svg>
+                </div>
+            )}
+
+            {/* Geometric Top (Angular modern cuts at top) */}
+            {curveVariant === 'geometric-top' && (
+                <div className="absolute top-0 left-0 w-full z-30 translate-y-[-1px] pointer-events-none">
+                    <svg
+                        viewBox="0 0 1440 120"
+                        className="w-full h-[80px] md:h-[120px] block"
+                        preserveAspectRatio="none"
+                    >
+                        {/* Fill shape */}
+                        <path
+                            d="M0,0 L1440,0 L1440,60 L1200,80 L960,40 L720,90 L480,50 L240,100 L0,70 Z"
+                            className={`fill-${nextSectionBg}`}
+                        />
+                        {/* Bronze accent line */}
+                        <path
+                            d="M1440,60 L1200,80 L960,40 L720,90 L480,50 L240,100 L0,70"
+                            className="fill-none stroke-bronze-500 stroke-[3px]"
+                        />
+                    </svg>
+                </div>
+            )}
+
+            {/* Layered Top (Multiple overlapping curves at top with depth) */}
+            {curveVariant === 'layered-top' && (
+                <div className="absolute top-0 left-0 w-full z-30 translate-y-[-1px] pointer-events-none">
+                    <svg
+                        viewBox="0 0 1440 120"
+                        className="w-full h-[100px] md:h-[140px] block"
+                        preserveAspectRatio="none"
+                    >
+                        {/* Back layer */}
+                        <path
+                            d="M0,0 L1440,0 L1440,40 Q1080,60 720,40 T0,40 Z"
+                            className={`fill-${nextSectionBg} opacity-50`}
+                        />
+                        {/* Middle layer */}
+                        <path
+                            d="M0,0 L1440,0 L1440,60 Q1080,90 720,60 T0,60 Z"
+                            className={`fill-${nextSectionBg} opacity-75`}
+                        />
+                        {/* Front layer */}
+                        <path
+                            d="M0,0 L1440,0 L1440,80 Q1080,120 720,80 T0,80 Z"
+                            className={`fill-${nextSectionBg}`}
+                        />
+                        {/* Bronze accent lines */}
+                        <path
+                            d="M1440,80 Q1080,120 720,80 T0,80"
+                            className="fill-none stroke-bronze-500 stroke-[2px] opacity-80"
+                        />
+                        <path
+                            d="M1440,60 Q1080,90 720,60 T0,60"
+                            className="fill-none stroke-bronze-500 stroke-[2px] opacity-40"
                         />
                     </svg>
                 </div>
