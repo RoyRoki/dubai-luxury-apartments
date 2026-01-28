@@ -2,38 +2,84 @@
 
 import { useEffect, useRef } from 'react'
 import Image from 'next/image'
+import { gsap } from 'gsap'
 import { fadeInOnScroll } from '@/lib/animations'
 
 export default function Amenities() {
   const sectionRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    fadeInOnScroll('.amenity-item', { y: 80, duration: 1.4, stagger: 0.3 })
+    // using gsap.context ensures all ScrollTriggers/animations created here are properly cleaned up
+    const ctx = gsap.context(() => {
+      // Select items within this context (scoped to sectionRef)
+      const items = document.querySelectorAll('.amenity-item')
+      items.forEach((item, index) => {
+        // Scroll Reveal
+        fadeInOnScroll(item, {
+          y: 80,
+          duration: 1.4,
+          delay: index * 0.2 // Manual stagger
+        })
+
+        const image = item.querySelector('img')
+        const overlay = item.querySelector('.absolute.inset-0') // The gradient overlay
+
+        if (image) {
+          // Parallax Effect
+          gsap.fromTo(image,
+            { scale: 1.15, yPercent: -10 },
+            {
+              yPercent: 10,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: item,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: true
+              }
+            }
+          )
+
+          // Hover Animation (Scale only, respecting parallax scale base)
+          item.addEventListener('mouseenter', () => {
+            gsap.to(image, { scale: 1.25, duration: 1.5, ease: 'power2.out', overwrite: 'auto' })
+            if (overlay) gsap.to(overlay, { opacity: 0.8, duration: 0.5, overwrite: 'auto' })
+          })
+
+          item.addEventListener('mouseleave', () => {
+            gsap.to(image, { scale: 1.15, duration: 1.5, ease: 'power2.out', overwrite: 'auto' })
+            if (overlay) gsap.to(overlay, { opacity: 1, duration: 0.5, overwrite: 'auto' })
+          })
+        }
+      })
+    }, sectionRef)
+
+    return () => ctx.revert()
   }, [])
 
   const amenities = [
     {
       title: 'Infinity Pool',
       description: "Weightless mornings. Your infinity pool suspends above the city's pulse, where water meets sky.",
-      image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1600&q=80',
+      image: '/images/amenities/infinity-pool.webp',
       align: 'left',
     },
     {
       title: 'Private Cinema',
       description: 'Cinematic evenings in intimate luxury. Your personal theater awaits, draped in velvet silence.',
-      image: 'https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?w=1600&q=80',
+      image: '/images/amenities/private-cinema.webp',
       align: 'right',
     },
     {
       title: 'Wellness Sanctuary',
       description: 'Transcend the everyday. Steam, sauna, thermal baths—rituals of renewal, privately yours.',
-      image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1600&q=80',
+      image: '/images/amenities/wellness.webp',
       align: 'left',
     },
     {
       title: 'Sky Terrace',
       description: 'Dusk conversations under desert stars. Your private observatory overlooks a city of infinite light.',
-      image: 'https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=1600&q=80',
+      image: '/images/amenities/sky-terrace.webp',
       align: 'right',
     },
   ]
@@ -61,34 +107,29 @@ export default function Amenities() {
           {amenities.map((amenity, index) => (
             <div
               key={index}
-              className={`amenity-item grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-center ${
-                amenity.align === 'right' ? 'lg:grid-flow-dense' : ''
-              }`}
+              className={`amenity-item grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-center ${amenity.align === 'right' ? 'lg:grid-flow-dense' : ''
+                }`}
             >
               {/* Image - Cinematic 16:9 */}
               <div
-                className={`relative h-[300px] md:h-[400px] lg:h-[500px] overflow-hidden group ${
-                  amenity.align === 'right' ? 'lg:col-span-7 lg:col-start-6' : 'lg:col-span-7'
-                }`}
+                className={`relative h-[300px] md:h-[400px] lg:h-[500px] overflow-hidden group ${amenity.align === 'right' ? 'lg:col-span-7 lg:col-start-6' : 'lg:col-span-7'
+                  }`}
               >
                 <Image
                   src={amenity.image}
                   alt={amenity.title}
                   fill
                   sizes="(max-width: 1024px) 100vw, 60vw"
-                  unoptimized
-                  className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
+                  className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950/20 via-transparent to-obsidian-950/60" />
               </div>
 
               {/* Text Content */}
               <div
-                className={`lg:col-span-5 ${
-                  amenity.align === 'right' ? 'lg:col-start-1 lg:row-start-1' : ''
-                } flex flex-col justify-center ${
-                  amenity.align === 'right' ? 'lg:pr-12' : 'lg:pl-12'
-                }`}
+                className={`lg:col-span-5 ${amenity.align === 'right' ? 'lg:col-start-1 lg:row-start-1' : ''
+                  } flex flex-col justify-center ${amenity.align === 'right' ? 'lg:pr-12' : 'lg:pl-12'
+                  }`}
               >
                 <h3 className="text-3xl md:text-4xl lg:text-5xl font-display font-light text-ivory-300 mb-6 tracking-wide">
                   {amenity.title}

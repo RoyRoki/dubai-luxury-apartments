@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
+import Image from 'next/image'
 import { ChevronDown } from 'lucide-react'
 import { staggerAnimation } from '@/lib/animations'
 
@@ -8,9 +9,8 @@ export default function FAQ() {
   const sectionRef = useRef<HTMLElement>(null)
   const [openIndex, setOpenIndex] = useState<number | null>(0)
 
-  useEffect(() => {
-    staggerAnimation('.faq-item')
-  }, [])
+  // Animations removed to ensure visibility
+
 
   const faqs = [
     {
@@ -44,56 +44,77 @@ export default function FAQ() {
   }
 
   return (
-    <section ref={sectionRef} className="section bg-navy-900" id="faq">
+    <section ref={sectionRef} className="section bg-obsidian-950" id="faq">
       <div className="container-custom">
         {/* Section Header */}
         <div className="text-center mb-16">
+          <p className="text-bronze-500 text-xs md:text-sm uppercase tracking-[0.3em] font-light mb-4">
+            Expert Guidance
+          </p>
           <h2 className="heading-xl mb-4">
-            Frequently Asked <span className="text-gold">Questions</span>
+            Frequently Asked <span className="text-bronze">Questions</span>
           </h2>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+          <p className="text-lg text-ivory-500 max-w-2xl mx-auto font-light">
             Everything you need to know about investing in Dubai luxury properties
           </p>
         </div>
 
-        {/* FAQ Items */}
-        <div className="max-w-3xl mx-auto space-y-4">
-          {faqs.map((faq, index) => (
-            <div
-              key={index}
-              className="faq-item glass rounded-xl overflow-hidden border border-gold-500/20 hover:border-gold-500/40 transition-all"
-            >
-              <button
-                onClick={() => toggleFAQ(index)}
-                className="w-full flex items-center justify-between p-6 text-left hover:bg-white/5 transition-colors"
-              >
-                <h3 className="text-lg md:text-xl font-semibold pr-4">{faq.question}</h3>
-                <ChevronDown
-                  size={24}
-                  className={`text-gold-500 flex-shrink-0 transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''
-                    }`}
-                />
-              </button>
-              {/* FIXED: Increased max-height to prevent content cutoff */}
-              <div
-                className={`overflow-hidden transition-all duration-300 ease-in-out ${openIndex === index ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
-                  }`}
-              >
-                <p className="px-6 pb-6 text-gray-400 leading-relaxed">{faq.answer}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          {/* Left Column: Image */}
+          <div className="lg:col-span-5 relative h-[500px] lg:h-[600px] hidden lg:block rounded-sm overflow-hidden group">
+            <Image
+              src="/images/interiors/grand-lobby.webp"
+              alt="Concierge Services"
+              fill
+              className="object-cover transition-transform duration-1000 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-obsidian-950/80 via-transparent to-transparent" />
 
-        {/* Still Have Questions CTA */}
-        <div className="text-center mt-12">
-          <p className="text-gray-400 mb-4">Still have questions?</p>
-          <button
-            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            className="btn-secondary"
-          >
-            Contact Our Team
-          </button>
+            {/* Overlay Text */}
+            <div className="absolute bottom-10 left-8 right-8 text-left">
+              <h3 className="text-2xl font-display text-ivory-100 mb-2">Concierge Service</h3>
+              <p className="text-sm text-ivory-400 font-light">Our dedicated team is available 24/7 to assist with your inquiries and property requirements.</p>
+            </div>
+          </div>
+
+          {/* Right Column: FAQ Items */}
+          <div className="lg:col-span-12 lg:col-start-7 lg:col-end-13 space-y-4">
+            {faqs.map((faq, index) => (
+              <div
+                key={index}
+                className="faq-item glass-dark rounded-sm overflow-hidden border border-white/5 hover:border-bronze-500/30 transition-all duration-300"
+              >
+                <button
+                  onClick={() => toggleFAQ(index)}
+                  className="w-full flex items-center justify-between p-6 text-left hover:bg-white/5 transition-colors"
+                >
+                  <h3 className="text-lg md:text-xl font-light text-ivory-200 pr-4">{faq.question}</h3>
+                  <ChevronDown
+                    size={20}
+                    className={`text-bronze-500 flex-shrink-0 transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''
+                      }`}
+                  />
+                </button>
+                <div
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${openIndex === index ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+                >
+                  <p className="px-6 pb-6 text-ivory-400 font-light leading-relaxed text-sm md:text-base">{faq.answer}</p>
+                </div>
+              </div>
+            ))}
+
+            {/* Still Have Questions CTA */}
+            <div className="text-left mt-12 pt-8 border-t border-white/10">
+              <p className="text-ivory-400 mb-4 font-light">Still have questions?</p>
+              <button
+                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                className="btn-secondary"
+              >
+                Contact Our Team
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>

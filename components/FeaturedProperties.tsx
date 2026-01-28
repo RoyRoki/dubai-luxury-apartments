@@ -7,9 +7,13 @@ import { staggerAnimation } from '@/lib/animations'
 export default function FeaturedProperties() {
   const sectionRef = useRef<HTMLElement>(null)
 
+  // Stagger animation removed - PropertyCard handles its own entrance animation
+  // to avoid GSAP conflicts and opacity issues
+  /* 
   useEffect(() => {
     staggerAnimation('.property-card', { y: 60, duration: 1.2 })
   }, [])
+  */
 
   // Curated properties - reduced to 4 exclusive residences
   const properties = [
@@ -17,7 +21,7 @@ export default function FeaturedProperties() {
       title: 'Burj Vista Penthouse',
       location: 'Downtown Dubai',
       price: 8500000,
-      image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=80',
+      image: '/images/exteriors/burj-vista.webp',
       bedrooms: 4,
       bathrooms: 5,
       area: 4500,
@@ -27,7 +31,7 @@ export default function FeaturedProperties() {
       title: 'Palm Jumeirah Villa',
       location: 'Palm Jumeirah',
       price: 12000000,
-      image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=80',
+      image: '/images/exteriors/palm-jumeirah-villa.webp',
       bedrooms: 6,
       bathrooms: 7,
       area: 8500,
@@ -37,7 +41,7 @@ export default function FeaturedProperties() {
       title: 'Marina Promenade Suite',
       location: 'Dubai Marina',
       price: 3200000,
-      image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80',
+      image: '/images/interiors/marina-suite.webp',
       bedrooms: 3,
       bathrooms: 3,
       area: 2800,
@@ -47,7 +51,7 @@ export default function FeaturedProperties() {
       title: 'Downtown Views',
       location: 'Downtown Dubai',
       price: 5500000,
-      image: 'https://images.unsplash.com/photo-1545324418-cc1a3d272947?w=800&q=80',
+      image: '/images/interiors/downtown-views.webp',
       bedrooms: 3,
       bathrooms: 4,
       area: 3100,
@@ -56,7 +60,7 @@ export default function FeaturedProperties() {
   ]
 
   return (
-    <section ref={sectionRef} className="section bg-obsidian-900 pt-24 md:pt-32" id="properties">
+    <section ref={sectionRef} className="section relative bg-obsidian-900 pt-24 md:pt-32" id="properties">
       <div className="container-editorial">
         {/* Section Header - Editorial Style */}
         <div className="text-center mb-20 md:mb-28">
@@ -104,6 +108,7 @@ export default function FeaturedProperties() {
           </button>
         </div>
       </div>
+
     </section>
   )
 }

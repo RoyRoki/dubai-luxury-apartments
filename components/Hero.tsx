@@ -1,99 +1,192 @@
 'use client'
 
-import { useEffect, useRef, MouseEvent } from 'react'
+import { useEffect, useRef, useState, MouseEvent } from 'react'
 import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { scrollToElement } from '@/lib/utils'
 import { createRipple } from '@/lib/animations'
+import Image from 'next/image'
+
+gsap.registerPlugin(ScrollTrigger)
 
 export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  // Sequence Configuration
+  const frameCount = 300
+  const imagesRef = useRef<HTMLImageElement[]>([])
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [currentFrame, setCurrentFrame] = useState({ frame: 0 })
 
   useEffect(() => {
+    // 1. Progressive Image Loading
+    const loadImages = async () => {
+      // Helper to load a batch of images
+      const loadBatch = (start: number, end: number) => {
+        return new Promise<void>((resolve) => {
+          let loaded = 0
+          const total = end - start + 1
+          if (total <= 0) { resolve(); return; }
+
+          for (let i = start; i <= end; i++) {
+            const img = new window.Image()
+            const filename = i.toString().padStart(4, '0')
+            img.src = `/images/sequence/hero-bg-webp/${filename}.webp` // Updated path
+
+            // Store image in array index (0-based)
+            const index = i - 1
+            imagesRef.current[index] = img
+
+            img.onload = () => {
+              loaded++
+              if (loaded === total) resolve()
+              // If it's the very first frame, mark as loaded to show something
+              if (i === 1) setIsLoaded(true)
+            }
+            img.onerror = () => {
+              console.warn(`Failed to load frame ${i}`)
+              loaded++
+              if (loaded === total) resolve()
+            }
+          }
+        })
+      }
+
+      // Phase 1: Critical Frame (First 1)
+      await loadBatch(1, 1)
+
+      // Phase 2: Initial Movement (Next 49) - Priority
+      loadBatch(2, 50).then(() => {
+        // Start animation ONLY after buffer is ready
+        if (heroRef.current) {
+          gsap.globalTimeline.add(() => {
+            // We use a custom event or just access the timeline if we store it?
+            // Easier: Dispatch event or use a ref.
+            // Actually, let's just trigger the animation here if we can access the GSAP instance?
+            // We can't easily access the localized 'tl' from here unless we structure differently.
+            // Alternative: Set a state 'canPlay' -> useEffect -> play.
+            // Or: just emit a custom event.
+            window.dispatchEvent(new Event('hero-buffer-ready'))
+          })
+        }
+
+        // Phase 3: Rest of Sequence
+        const chunkSize = 50
+        const loadRest = async () => {
+          for (let i = 51; i <= frameCount; i += chunkSize) {
+            await loadBatch(i, Math.min(i + chunkSize - 1, frameCount))
+            // Small breathing room for UI
+            await new Promise(r => setTimeout(r, 50))
+          }
+        }
+        loadRest()
+      })
+    }
+
+    // Start Loading
+    loadImages()
+
+    // 2. Setup Canvas & Animation
     const ctx = gsap.context(() => {
-      // ULTRA-LUXURY: Hero Pin Effect
-      gsap.to(heroRef.current, {
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: 'top top',
-          end: 'bottom top',
-          pin: false,
-          scrub: 1,
-        },
-      })
+      const canvas = canvasRef.current
+      if (!canvas) return
 
-      // Video slow-down on scroll
-      if (videoRef.current) {
-        gsap.to(videoRef.current, {
-          scrollTrigger: {
-            trigger: heroRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1,
-            onUpdate: (self) => {
-              if (videoRef.current) {
-                videoRef.current.playbackRate = 1 - self.progress * 0.5
-              }
-            },
-          },
-        })
+      const context = canvas.getContext('2d')
+      if (!context) return
+
+      // Render loop
+      const render = () => {
+        const frameIndex = Math.round(currentFrame.frame)
+        const img = imagesRef.current[frameIndex]
+
+        if (!context || !img || !img.complete || img.naturalWidth === 0) return
+
+        // Draw image cover logic
+        const hRatio = canvas.width / img.width
+        const vRatio = canvas.height / img.height
+        const ratio = Math.max(hRatio, vRatio)
+        const centerShift_x = (canvas.width - img.width * ratio) / 2
+        const centerShift_y = (canvas.height - img.height * ratio) / 2
+
+        context.clearRect(0, 0, canvas.width, canvas.height)
+        context.drawImage(
+          img,
+          0, 0, img.width, img.height,
+          centerShift_x, centerShift_y, img.width * ratio, img.height * ratio
+        )
       }
 
-      // Split text animation - letter by letter reveal
-      const headline = document.querySelector('.hero-headline')
-      if (headline) {
-        const text = headline.textContent || ''
-        headline.innerHTML = text
-          .split('')
-          .map(char => `<span class="inline-block opacity-0" style="transform: translateY(100px)">${char === ' ' ? '&nbsp;' : char}</span>`)
-          .join('')
-
-        gsap.to('.hero-headline span', {
-          opacity: 1,
-          y: 0,
-          duration: 1.2,
-          stagger: 0.03,
-          ease: 'power4.out',
-          delay: 0.3,
-        })
+      // Set canvas size
+      const updateSize = () => {
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
+        // Redraw current frame on resize
+        if (imagesRef.current[Math.round(currentFrame.frame)]) {
+          render()
+        }
       }
+      updateSize()
+      window.addEventListener('resize', updateSize)
 
-      // Subheadline cascade
-      gsap.from('.hero-subheadline', {
-        opacity: 0,
-        y: 40,
-        duration: 1.4,
-        ease: 'power3.out',
-        delay: 1.2,
+      // Animation Timeline (Paused initially)
+      const duration = frameCount / 24 // 24 fps
+      const tl = gsap.timeline({
+        paused: true,
+        repeat: -1,
+        onUpdate: render
       })
 
-      // CTA fade in
+      tl.to(currentFrame, {
+        frame: frameCount - 1,
+        duration: duration,
+        ease: 'none',
+      })
+
+      // Listen for buffer ready
+      const startAnimation = () => {
+        tl.play()
+      }
+      window.addEventListener('hero-buffer-ready', startAnimation)
+
+      // Initial Render Check
+      const checkFirstFrame = setInterval(() => {
+        if (imagesRef.current[0] && imagesRef.current[0].complete) {
+          render()
+          clearInterval(checkFirstFrame)
+        }
+      }, 50)
+
+      // CTA Entrance (Independent)
       gsap.from('.hero-cta', {
         opacity: 0,
         y: 30,
         duration: 1,
-        ease: 'power2.out',
-        delay: 1.8,
+        delay: 0.5,
       })
 
-      // Scroll indicator with pulse
+      // Scroll Indicator Fade
       gsap.from('.scroll-indicator', {
         opacity: 0,
-        y: -20,
-        duration: 1,
-        ease: 'power2.out',
-        delay: 2.2,
+        delay: 1.5
       })
 
-      // Infinite pulse animation
-      gsap.to('.scroll-indicator', {
-        y: 10,
-        duration: 1.5,
-        ease: 'sine.inOut',
-        repeat: -1,
-        yoyo: true,
-        delay: 3,
-      })
+      // Curve Animation
+      const curve = document.querySelector('.hero-curve-path')
+      if (curve) {
+        gsap.to(curve, {
+          attr: { d: 'M0,0 C480,0 960,0 1440,0 V100 H0 Z' },
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true
+          },
+          ease: 'none'
+        })
+      }
+
+      return () => window.removeEventListener('resize', updateSize)
     }, heroRef)
 
     return () => ctx.revert()
@@ -109,61 +202,27 @@ export default function Hero() {
   }
 
   return (
-    <section ref={heroRef} className="relative h-[120vh] w-full overflow-hidden" id="hero">
-      {/* Cinematic Video Background */}
-      <div className="absolute inset-0 z-0">
-        {/* Video - Replace with actual Dubai skyline drone footage */}
-        <video
-          ref={videoRef}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          {/* Use a real Dubai skyline video URL or local file */}
-          <source
-            src="https://cdn.coverr.co/videos/coverr-dubai-skyline-at-night-5394/1080p.mp4"
-            type="video/mp4"
-          />
-        </video>
+    <section ref={heroRef} className="relative h-screen w-full overflow-hidden bg-obsidian-950" id="hero">
+      {/* Canvas Layer */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full z-0 object-cover"
+      />
 
-        {/* Obsidian Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950/20 via-obsidian-950/70 to-obsidian-950" />
+      {/* Fallback while loading */}
+      {!isLoaded && (
+        <div className="absolute inset-0 z-0 bg-obsidian-950 flex items-center justify-center">
+          <div className="w-12 h-12 border-2 border-bronze-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
 
-        {/* Subtle teal accent gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-800/10 via-transparent to-bronze-900/10" />
+      {/* Gradient Overlays */}
+      <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950/30 via-transparent to-obsidian-950/80 z-10 pointer-events-none" />
 
-        {/* Film grain texture */}
-        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMzAwdjMwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=')]" />
-      </div>
-
-      {/* Content */}
-      <div className="relative h-full flex items-center justify-center z-10">
+      {/* Content Layer */}
+      <div className="relative z-20 h-full flex items-end justify-center pb-32 md:pb-40">
         <div className="container-editorial text-center">
-          {/* Eyebrow Text */}
-          <div className="mb-8 md:mb-12">
-            <p className="text-bronze-500 text-xs md:text-sm uppercase tracking-[0.3em] font-light">
-              Dubai&apos;s Legendary Addresses
-            </p>
-          </div>
-
-          {/* Massive Headline - 10vw Cormorant */}
-          <h1 className="hero-headline heading-hero text-ivory-300 mb-6 md:mb-10 will-change-transform">
-            SANCTUARY
-          </h1>
-
-          {/* Subheadline - Poetic & Minimal */}
-          <div className="hero-subheadline max-w-3xl mx-auto mb-12 md:mb-16">
-            <p className="text-lg md:text-2xl lg:text-3xl text-ivory-400 font-display font-light leading-relaxed tracking-[0.08em]">
-              Where the city&apos;s pulse meets <span className="text-bronze-500 italic">timeless elegance.</span>
-            </p>
-            <p className="text-base md:text-xl text-ivory-500 font-light leading-relaxed tracking-wide mt-4">
-              Residences curated for those who shape horizons.
-            </p>
-          </div>
-
-          {/* CTAs - Frosted Glass Style with Ripple */}
+          {/* Buttons moved to bottom */}
           <div className="hero-cta flex flex-col sm:flex-row items-center justify-center gap-6">
             <button
               onClick={(e) => handleButtonClick(e, handleScroll)}
@@ -181,7 +240,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Scroll Indicator - Minimal */}
       <button
         onClick={handleScroll}
         className="scroll-indicator absolute bottom-12 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 text-bronze-500 hover:text-bronze-400 transition-colors group"
@@ -190,6 +248,20 @@ export default function Hero() {
         <span className="text-xs uppercase tracking-[0.3em] font-light">Discover</span>
         <div className="w-[1px] h-16 bg-gradient-to-b from-bronze-500/60 to-transparent group-hover:h-20 transition-all duration-500" />
       </button>
+
+      {/* Curved Divider */}
+      <div className="absolute bottom-0 left-0 w-full z-[15] translate-y-[1px] pointer-events-none">
+        <svg
+          viewBox="0 0 1440 100"
+          className="w-full h-[80px] md:h-[120px] fill-obsidian-950 block"
+          preserveAspectRatio="none"
+        >
+          <path
+            className="hero-curve-path"
+            d="M0,0 C480,100 960,100 1440,0 V100 H0 Z"
+          />
+        </svg>
+      </div>
     </section>
   )
 }

@@ -3,6 +3,8 @@
 import { useState, useEffect, RefObject } from 'react'
 import { Menu, X, Phone } from 'lucide-react'
 import { scrollToElement } from '@/lib/utils'
+import { usePathname, useRouter } from 'next/navigation'
+import Image from 'next/image'
 import type Lenis from '@studio-freight/lenis'
 
 interface HeaderProps {
@@ -35,7 +37,16 @@ export default function Header({ lenisInstance }: HeaderProps) {
     }
   }, [lenisInstance])
 
-  const navLinks = [
+  const pathname = usePathname()
+  const router = useRouter()
+
+  interface NavLink {
+    name: string
+    href: string
+    isPage?: boolean
+  }
+
+  const navLinks: NavLink[] = [
     { name: 'Properties', href: 'properties' },
     { name: 'Amenities', href: 'amenities' },
     { name: 'Location', href: 'location' },
@@ -43,7 +54,19 @@ export default function Header({ lenisInstance }: HeaderProps) {
     { name: 'FAQ', href: 'faq' },
   ]
 
-  const handleNavClick = (href: string) => {
+  const handleNavClick = (href: string, isPage = false) => {
+    if (isPage) {
+      router.push(`/${href}`)
+      setIsMobileMenuOpen(false)
+      return
+    }
+
+    if (pathname !== '/') {
+      router.push(`/#${href}`)
+      setIsMobileMenuOpen(false)
+      return
+    }
+
     if (lenisInstance?.current) {
       lenisInstance.current.scrollTo(`#${href}`, {
         duration: 1.5,
@@ -64,14 +87,15 @@ export default function Header({ lenisInstance }: HeaderProps) {
     >
       <nav className="container-custom flex items-center justify-between py-4 md:py-6 px-4 sm:px-6 lg:px-8">
         {/* Logo - With Metallic Hover */}
-        <div className="flex items-center space-x-2 group/logo cursor-pointer">
-          <div className="w-10 h-10 bg-gradient-bronze rounded flex items-center justify-center transition-all duration-500 group-hover/logo:shadow-lg group-hover/logo:shadow-bronze-500/30 group-hover/logo:scale-105 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/logo:translate-x-full transition-transform duration-1000" />
-            <span className="font-display text-2xl font-light text-ivory-300 relative z-10">D</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="font-display text-xl font-light leading-none text-ivory-300 tracking-wide transition-colors duration-500 group-hover/logo:text-bronze-400">Dubai</span>
-            <span className="text-xs text-bronze-500 leading-none uppercase tracking-wider">Luxury</span>
+        <div className="flex items-center space-x-2 group/logo cursor-pointer" onClick={() => handleNavClick('/')}>
+          <div className="relative w-32 h-14 md:w-40 md:h-16 transition-transform duration-500 group-hover/logo:scale-105">
+            <Image
+              src="/logo.webp"
+              alt="Dubai Luxury"
+              fill
+              className="object-contain" // object-contain to ensure it fits and doesn't crop
+              priority
+            />
           </div>
         </div>
 
@@ -80,7 +104,7 @@ export default function Header({ lenisInstance }: HeaderProps) {
           {navLinks.map((link) => (
             <li key={link.href}>
               <button
-                onClick={() => handleNavClick(link.href)}
+                onClick={() => handleNavClick(link.href, link.isPage)}
                 className="text-ivory-400 hover:text-bronze-500 transition-colors duration-500 font-light text-sm xl:text-base uppercase tracking-wider"
               >
                 {link.name}
@@ -117,7 +141,7 @@ export default function Header({ lenisInstance }: HeaderProps) {
           {navLinks.map((link) => (
             <li key={link.href}>
               <button
-                onClick={() => handleNavClick(link.href)}
+                onClick={() => handleNavClick(link.href, link.isPage)}
                 className="text-ivory-400 hover:text-bronze-500 transition-colors duration-500 font-light text-lg w-full text-left uppercase tracking-wide"
               >
                 {link.name}

@@ -1,16 +1,13 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import Image from 'next/image'
-import { fadeInOnScroll } from '@/lib/animations'
 
 export default function Location() {
   const sectionRef = useRef<HTMLElement>(null)
 
-  useEffect(() => {
-    fadeInOnScroll('.location-content', { y: 60, duration: 1.2 })
-    fadeInOnScroll('.location-tags', { y: 40, duration: 1, stagger: 0.15 })
-  }, [])
+  // Animations removed to ensure visibility
+
 
   const locations = [
     {
@@ -59,11 +56,10 @@ export default function Location() {
           <div className="location-content lg:col-span-7">
             <div className="relative h-[400px] md:h-[500px] lg:h-[700px] overflow-hidden group">
               <Image
-                src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1600&q=80"
+                src="/images/location/dubai-skyline.webp"
                 alt="Dubai Skyline"
                 fill
                 sizes="(max-width: 1024px) 100vw, 60vw"
-                unoptimized
                 className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-br from-obsidian-950/30 via-transparent to-obsidian-950/70" />

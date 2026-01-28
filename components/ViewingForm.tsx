@@ -122,7 +122,15 @@ export default function ViewingForm() {
         input,
         { x: 0 },
         {
-          x: [-10, 10, -10, 10, -5, 5, 0],
+          keyframes: [
+            { x: -10 },
+            { x: 10 },
+            { x: -10 },
+            { x: 10 },
+            { x: -5 },
+            { x: 5 },
+            { x: 0 }
+          ],
           duration: 0.6,
           ease: 'power2.out',
         }
@@ -144,166 +152,164 @@ export default function ViewingForm() {
       {/* Full-bleed dark gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-obsidian-900 via-obsidian-950 to-teal-900/10" />
 
-      {/* Subtle blurred architectural photo overlay */}
-      <div
-        className="absolute inset-0 opacity-10 bg-cover bg-center"
-        style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=1600&q=60')",
-          filter: 'blur(40px)',
-        }}
-      />
+      <div className="container-custom px-4 md:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 overflow-hidden rounded-2xl border border-bronze-600/10 bg-obsidian-900/50 backdrop-blur-sm shadow-2xl">
 
-      <div className="container-editorial relative">
-        {/* Section Header */}
-        <div className="text-center mb-16 md:mb-20">
-          <p className="text-bronze-500 text-xs md:text-sm uppercase tracking-[0.3em] font-light mb-6">
-            Exclusive Access
-          </p>
-          <h2 className="heading-xl mb-6">
-            <span className="text-ivory-300">Request</span>
-            <br />
-            <span className="text-bronze">Private Viewing</span>
-          </h2>
-          <p className="text-base md:text-lg text-ivory-500 max-w-2xl mx-auto font-light leading-relaxed tracking-wide">
-            Begin your journey. Our concierge will curate your experience.
-          </p>
-        </div>
+          {/* Left Column: Image & Context */}
+          <div className="relative h-64 lg:h-auto overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-t from-obsidian-950/90 via-obsidian-950/20 to-transparent z-10" />
 
-        <div className="max-w-2xl mx-auto">
-          <div className="glass-dark p-8 md:p-12 group">
-            {isSuccess ? (
-              <div className="text-center py-12">
-                <CheckCircle size={64} className="text-bronze-500 mx-auto mb-6" />
-                <h3 className="text-2xl md:text-3xl font-display font-light text-ivory-300 mb-4 tracking-wide">
-                  Request Received
-                </h3>
-                <p className="text-ivory-500 font-light leading-relaxed">
-                  Our team will contact you discreetly within 24 hours to arrange your private viewing.
-                </p>
-              </div>
-            ) : (
-              {/* FIXED: Added noValidate to use custom validation instead of browser validation */ }
-              <form ref={formRef} onSubmit={handleSubmit} noValidate className="space-y-8">
-            {/* Name */}
-            <div className="relative group/input">
-              {/* FIXED: Added required indicator */}
-              <label
-                htmlFor="name"
-                className="absolute -top-5 left-0 text-xs text-bronze-500 uppercase tracking-[0.2em] font-light transition-all duration-300"
-              >
-                Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-                className={`w-full px-0 py-4 bg-transparent border-b-2 ${errors.name ? 'border-red-500' : 'border-bronze-600/20'
-                  } focus:outline-none focus:border-bronze-500 transition-all duration-500 text-ivory-300 font-light placeholder:text-ivory-600`}
-                placeholder="Full Name"
-              />
-              {/* FIXED: Enhanced error message visibility */}
-              {errors.name && <p className="text-red-400 text-sm mt-2 font-light animate-shake">{errors.name}</p>}
+            {/* Image */}
+            <div
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105"
+              style={{ backgroundImage: "url('/images/interiors/modern-dark-living.webp')" }}
+            />
+
+            {/* Content overlay */}
+            <div className="absolute bottom-0 left-0 p-8 md:p-12 z-20">
+              <p className="text-bronze-500 text-xs uppercase tracking-[0.3em] font-light mb-4">
+                Exclusive Access
+              </p>
+              <h2 className="heading-lg mb-4 text-ivory-100">
+                Request Private<br />Viewing
+              </h2>
+              <p className="text-ivory-300 font-light leading-relaxed max-w-md">
+                Experience the pinnacle of luxury living. Our concierge team is ready to curate your personal tour.
+              </p>
             </div>
+          </div>
 
-            {/* Email & Phone */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="relative group/input">
-                {/* FIXED: Added required indicator */}
-                <label
-                  htmlFor="email"
-                  className="absolute -top-5 left-0 text-xs text-bronze-500 uppercase tracking-[0.2em] font-light transition-all duration-300"
-                >
-                  Email <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
-                  className={`w-full px-0 py-4 bg-transparent border-b-2 ${errors.email ? 'border-red-500' : 'border-bronze-600/20'
-                    } focus:outline-none focus:border-bronze-500 transition-all duration-500 text-ivory-300 font-light placeholder:text-ivory-600`}
-                  placeholder="Email Address"
-                />
-                {errors.email && <p className="text-red-400 text-sm mt-2 font-light animate-shake">{errors.email}</p>}
-              </div>
+          {/* Right Column: Form */}
+          <div className="p-8 md:p-12 lg:p-16 flex items-center bg-obsidian-950/80">
+            <div className="w-full">
+              {isSuccess ? (
+                <div className="text-center py-12">
+                  <CheckCircle size={64} className="text-bronze-500 mx-auto mb-6" />
+                  <h3 className="text-2xl md:text-3xl font-display font-light text-ivory-300 mb-4 tracking-wide">
+                    Request Received
+                  </h3>
+                  <p className="text-ivory-500 font-light leading-relaxed">
+                    Our team will contact you discreetly within 24 hours to arrange your private viewing.
+                  </p>
+                </div>
+              ) : (
+                <form ref={formRef} onSubmit={handleSubmit} noValidate className="space-y-8">
+                  {/* Name */}
+                  <div className="relative group/input">
+                    <label
+                      htmlFor="name"
+                      className="absolute -top-5 left-0 text-xs text-bronze-500 uppercase tracking-[0.2em] font-light transition-all duration-300"
+                    >
+                      Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                      className={`w-full px-0 py-4 bg-transparent border-b-2 ${errors.name ? 'border-red-500' : 'border-bronze-600/20'
+                        } focus:outline-none focus:border-bronze-500 transition-all duration-500 text-ivory-300 font-light placeholder:text-ivory-600`}
+                      placeholder="Full Name"
+                    />
+                    {errors.name && <p className="text-red-400 text-sm mt-2 font-light animate-shake">{errors.name}</p>}
+                  </div>
 
-              <div className="relative group/input">
-                {/* FIXED: Added required indicator */}
-                <label
-                  htmlFor="phone"
-                  className="absolute -top-5 left-0 text-xs text-bronze-500 uppercase tracking-[0.2em] font-light transition-all duration-300"
-                >
-                  Phone <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
-                  className={`w-full px-0 py-4 bg-transparent border-b-2 ${errors.phone ? 'border-red-500' : 'border-bronze-600/20'
-                    } focus:outline-none focus:border-bronze-500 transition-all duration-500 text-ivory-300 font-light placeholder:text-ivory-600`}
-                  placeholder="+971 50 123 4567"
-                />
-                {errors.phone && <p className="text-red-400 text-sm mt-2 font-light animate-shake">{errors.phone}</p>}
-              </div>
+                  {/* Email & Phone */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="relative group/input">
+                      <label
+                        htmlFor="email"
+                        className="absolute -top-5 left-0 text-xs text-bronze-500 uppercase tracking-[0.2em] font-light transition-all duration-300"
+                      >
+                        Email <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        className={`w-full px-0 py-4 bg-transparent border-b-2 ${errors.email ? 'border-red-500' : 'border-bronze-600/20'
+                          } focus:outline-none focus:border-bronze-500 transition-all duration-500 text-ivory-300 font-light placeholder:text-ivory-600`}
+                        placeholder="Email Address"
+                      />
+                      {errors.email && <p className="text-red-400 text-sm mt-2 font-light animate-shake">{errors.email}</p>}
+                    </div>
+
+                    <div className="relative group/input">
+                      <label
+                        htmlFor="phone"
+                        className="absolute -top-5 left-0 text-xs text-bronze-500 uppercase tracking-[0.2em] font-light transition-all duration-300"
+                      >
+                        Phone <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        className={`w-full px-0 py-4 bg-transparent border-b-2 ${errors.phone ? 'border-red-500' : 'border-bronze-600/20'
+                          } focus:outline-none focus:border-bronze-500 transition-all duration-500 text-ivory-300 font-light placeholder:text-ivory-600`}
+                        placeholder="+971 50 123 4567"
+                      />
+                      {errors.phone && <p className="text-red-400 text-sm mt-2 font-light animate-shake">{errors.phone}</p>}
+                    </div>
+                  </div>
+
+                  {/* Preferred Date */}
+                  <div className="relative group/input">
+                    <label
+                      htmlFor="preferredDate"
+                      className="absolute -top-5 left-0 text-xs text-bronze-500 uppercase tracking-[0.2em] font-light transition-all duration-300"
+                    >
+                      Preferred Date <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      id="preferredDate"
+                      name="preferredDate"
+                      value={formData.preferredDate}
+                      onChange={handleChange}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                      min={new Date().toISOString().split('T')[0]}
+                      className={`w-full px-0 py-4 bg-transparent border-b-2 ${errors.preferredDate ? 'border-red-500' : 'border-bronze-600/20'
+                        } focus:outline-none focus:border-bronze-500 transition-all duration-500 text-ivory-300 font-light`}
+                    />
+                    {errors.preferredDate && <p className="text-red-400 text-sm mt-2 font-light animate-shake">{errors.preferredDate}</p>}
+                  </div>
+
+                  {/* Submit Button */}
+                  <div className="pt-6">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <span className="relative z-10">
+                        {isSubmitting ? 'Submitting Request...' : 'Enquire Discreetly'}
+                      </span>
+                    </button>
+                  </div>
+
+                  {/* Privacy Notice */}
+                  <p className="text-xs text-ivory-600 text-center font-light leading-relaxed">
+                    Your information is handled with absolute discretion. We never share your details with third parties.
+                  </p>
+                </form>
+              )}
             </div>
-
-            {/* Preferred Date */}
-            <div className="relative group/input">
-              {/* FIXED: Added required indicator */}
-              <label
-                htmlFor="preferredDate"
-                className="absolute -top-5 left-0 text-xs text-bronze-500 uppercase tracking-[0.2em] font-light transition-all duration-300"
-              >
-                Preferred Date <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="date"
-                id="preferredDate"
-                name="preferredDate"
-                value={formData.preferredDate}
-                onChange={handleChange}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-                min={new Date().toISOString().split('T')[0]}
-                className={`w-full px-0 py-4 bg-transparent border-b-2 ${errors.preferredDate ? 'border-red-500' : 'border-bronze-600/20'
-                  } focus:outline-none focus:border-bronze-500 transition-all duration-500 text-ivory-300 font-light`}
-              />
-              {errors.preferredDate && <p className="text-red-400 text-sm mt-2 font-light animate-shake">{errors.preferredDate}</p>}
-            </div>
-
-            {/* Submit Button */}
-            <div className="pt-6">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <span className="relative z-10">
-                  {isSubmitting ? 'Submitting Request...' : 'Enquire Discreetly'}
-                </span>
-              </button>
-            </div>
-
-            {/* Privacy Notice */}
-            <p className="text-xs text-ivory-600 text-center font-light leading-relaxed">
-              Your information is handled with absolute discretion. We never share your details with third parties.
-            </p>
-          </form>
-            )}
+          </div>
         </div>
       </div>
-    </div>
-    </section >
+    </section>
   )
 }

@@ -12,8 +12,9 @@ export default function Investment() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
 
-    fadeInOnScroll('.investment-image', { x: -60, duration: 1.2 })
-    fadeInOnScroll('.investment-content', { x: 60, duration: 1.2, delay: 0.2 })
+    gsap.registerPlugin(ScrollTrigger)
+
+    // Animations removed to ensure visibility
 
     // Counter animations for main stats
     const statCounters = document.querySelectorAll('.stat-counter')
@@ -103,7 +104,7 @@ export default function Investment() {
           <div className="investment-image lg:col-span-7">
             <div className="relative h-[400px] md:h-[600px] lg:h-[700px] overflow-hidden group">
               <Image
-                src="https://images.unsplash.com/photo-1545324418-cc1a3d272947?w=1600&q=80"
+                src="/images/interiors/downtown-views.webp"
                 alt="Luxury Investment Property"
                 fill
                 sizes="(max-width: 1024px) 100vw, 60vw"

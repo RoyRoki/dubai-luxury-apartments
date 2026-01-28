@@ -40,33 +40,41 @@ export default function PropertyCard({
   useEffect(() => {
     if (!cardRef.current || !imageRef.current) return
 
-    gsap.registerPlugin(ScrollTrigger)
+    // Use gsap.context for proper cleanup in React Strict Mode
+    const ctx = gsap.context(() => {
+      // 1. Card fade in + scale entrance
+      gsap.from(cardRef.current, {
+        opacity: 0,
+        y: 60,
+        scale: 0.95,
+        duration: 1.2,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: cardRef.current,
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        },
+      })
 
-    // Card fade in + scale
-    gsap.from(cardRef.current, {
-      opacity: 0,
-      y: 60,
-      scale: 0.95,
-      duration: 1.2,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: cardRef.current,
-        start: 'top 85%',
-        toggleActions: 'play none none none',
-      },
-    })
+      // 2. Image parallax effect (Robust method: animate yPercent on taller container)
+      gsap.fromTo(imageRef.current,
+        {
+          yPercent: -10, // Start slightly up
+        },
+        {
+          yPercent: 10,  // Move slightly down
+          ease: 'none',
+          scrollTrigger: {
+            trigger: cardRef.current,
+            start: 'top bottom', // Start when card enters viewport
+            end: 'bottom top',   // End when card leaves viewport
+            scrub: true,
+          },
+        }
+      )
+    }, cardRef) // Scope to cardRef
 
-    // Image parallax effect
-    gsap.to(imageRef.current, {
-      y: -30,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: cardRef.current,
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: 1.5,
-      },
-    })
+    return () => ctx.revert() // Cleanup on unmount
   }, [])
 
   return (
@@ -78,16 +86,15 @@ export default function PropertyCard({
     >
       {/* Image Container */}
       <div className={`relative ${heightClass} overflow-hidden bg-obsidian-900`}>
-        <div ref={imageRef} className="absolute inset-0">
+        {/* Parallax Container - Explicitly taller than parent for safe scrolling */}
+        <div ref={imageRef} className="absolute inset-x-0 -top-[10%] h-[120%] w-full">
           <Image
             src={image}
             alt={title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 66vw"
-            unoptimized
-            className={`object-cover transition-all duration-1000 ease-out ${
-              isHovered ? 'scale-110 brightness-90' : 'scale-100 brightness-100'
-            }`}
+            className={`object-cover transition-all duration-1000 ease-out ${isHovered ? 'scale-105 brightness-90' : 'scale-100 brightness-100'
+              }`}
           />
         </div>
 
@@ -103,9 +110,8 @@ export default function PropertyCard({
 
         {/* Base Info Overlay - Always Visible */}
         <div
-          className={`absolute inset-x-0 bottom-0 p-6 md:p-8 bg-gradient-to-t from-obsidian-950 via-obsidian-950/90 to-transparent z-10 transition-opacity duration-500 ${
-            isHovered ? 'opacity-0' : 'opacity-100'
-          }`}
+          className={`absolute inset-x-0 bottom-0 p-6 md:p-8 bg-gradient-to-t from-obsidian-950 via-obsidian-950/90 to-transparent z-10 transition-opacity duration-500 ${isHovered ? 'opacity-0' : 'opacity-100'
+            }`}
         >
           <h3 className="text-xl md:text-2xl font-display font-light text-ivory-300 mb-2 tracking-wide">
             {title}
@@ -117,9 +123,8 @@ export default function PropertyCard({
 
         {/* Hover Details Overlay - Elegant Slide Up */}
         <div
-          className={`absolute inset-0 bg-obsidian-950/95 backdrop-blur-md flex flex-col items-center justify-center gap-6 p-8 transition-all duration-700 ${
-            isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
-          }`}
+          className={`absolute inset-0 bg-obsidian-950/95 backdrop-blur-md flex flex-col items-center justify-center gap-6 p-8 transition-all duration-700 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'
+            }`}
         >
           {/* Title & Price */}
           <div className="text-center">

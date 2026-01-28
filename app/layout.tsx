@@ -15,10 +15,15 @@ export const metadata: Metadata = {
   title: 'Dubai Luxury Apartments | Premium Properties in Prime Locations',
   description: 'Discover exclusive luxury apartments in Dubai\'s most prestigious locations - Downtown, Marina, and Palm Jumeirah. Schedule your viewing today.',
   keywords: 'Dubai luxury apartments, premium properties Dubai, Downtown Dubai, Dubai Marina, Palm Jumeirah, luxury real estate',
+  icons: {
+    icon: '/logo.webp',
+    shortcut: '/logo.webp',
+    apple: '/logo.webp',
+  },
   openGraph: {
     title: 'Dubai Luxury Apartments | Premium Properties',
     description: 'Exclusive luxury living in Dubai\'s prime locations',
-    images: ['/og-image.jpg'],
+    images: ['/logo.png'],
   },
 }
 
