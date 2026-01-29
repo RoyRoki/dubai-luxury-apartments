@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { X, ChevronRight, Calculator, TrendingUp, CheckCircle } from 'lucide-react'
 import { getAssetPath } from '@/lib/utils'
+import Image from 'next/image'
 import { gsap } from 'gsap'
 
 interface MortgageCalculatorProps {
@@ -127,10 +128,12 @@ export default function MortgageCalculator({ isOpen, onClose }: MortgageCalculat
 
                     {/* Small Image in Top Empty Space */}
                     <div className="absolute top-12 left-10 z-20 w-64 h-80 opacity-80 mix-blend-screen grayscale hover:grayscale-0 transition-all duration-500 hidden lg:block">
-                        <img
+                        <Image
                             src={getAssetPath('/images/exteriors/architectural-detail.webp')}
                             alt="Detail"
-                            className="object-cover w-full h-full rounded border border-bronze-500/30"
+                            fill
+                            className="object-cover border border-bronze-500/30 rounded"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />
                     </div>
 
