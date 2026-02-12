@@ -1,120 +1,17 @@
 'use client'
 
-import { useEffect, useRef, useLayoutEffect } from 'react'
+import { useRef } from 'react'
 import Image from 'next/image'
-import { fadeInOnScroll, counterAnimation } from '@/lib/animations'
 import { getAssetPath } from '@/lib/utils'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import Counter from '@/components/ui/Counter'
 
 export default function Investment() {
   const sectionRef = useRef<HTMLElement>(null)
 
-  useLayoutEffect(() => {
-    if (typeof window === 'undefined') return
-
-    gsap.registerPlugin(ScrollTrigger)
-
-    // Mobile-specific optimizations
-    const isMobile = window.innerWidth < 768
-
-    // Configure ScrollTrigger for better mobile performance
-    ScrollTrigger.config({
-      ignoreMobileResize: true, // Prevent recalculation on mobile resize
-      autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load', // Limit refresh events
-    })
-
-    const ctx = gsap.context(() => {
-      // Counter animations for main stats (5.8%, 0.0%, 15.0%)
-      const statCounters = document.querySelectorAll<HTMLElement>('.stat-counter')
-
-      statCounters.forEach((counter) => {
-        const target = parseFloat(counter.getAttribute('data-target') || '0')
-        const isDecimal = counter.getAttribute('data-decimal') === 'true'
-        let hasAnimated = false
-
-        // Add will-change for GPU acceleration
-        counter.style.willChange = 'contents'
-
-        ScrollTrigger.create({
-          trigger: counter,
-          start: 'top 80%',
-          onEnter: () => {
-            if (!hasAnimated) {
-              hasAnimated = true
-              const obj = { value: 0 }
-
-              gsap.to(obj, {
-                value: target,
-                duration: isMobile ? 1.5 : 2.0, // Faster animation on mobile
-                ease: 'power2.out',
-                onUpdate: () => {
-                  counter.textContent = isDecimal
-                    ? obj.value.toFixed(1)
-                    : Math.round(obj.value).toString()
-                },
-                onComplete: () => {
-                  // Remove will-change after animation completes
-                  counter.style.willChange = 'auto'
-                }
-              })
-            }
-          },
-        })
-      })
-
-      // Counter animations for bottom stats ($2.3B, 200+, 10 Years)
-      const bottomCounters = document.querySelectorAll<HTMLElement>('.bottom-stat-counter')
-
-      bottomCounters.forEach((counter) => {
-        const text = counter.getAttribute('data-text') || ''
-        const numMatch = text.match(/[\d.]+/)
-        if (numMatch) {
-          const target = parseFloat(numMatch[0])
-          const prefix = text.split(numMatch[0])[0]
-          const suffix = text.split(numMatch[0])[1]
-          let hasAnimated = false
-
-          // Add will-change for GPU acceleration
-          counter.style.willChange = 'contents'
-
-          ScrollTrigger.create({
-            trigger: counter,
-            start: 'top 80%',
-            onEnter: () => {
-              if (!hasAnimated) {
-                hasAnimated = true
-                const obj = { value: 0 }
-
-                gsap.to(obj, {
-                  value: target,
-                  duration: isMobile ? 1.8 : 2.5, // Faster animation on mobile
-                  ease: 'power2.out',
-                  onUpdate: () => {
-                    const displayValue = suffix.includes('.') || text.includes('.')
-                      ? obj.value.toFixed(1)
-                      : Math.round(obj.value).toString()
-                    counter.textContent = `${prefix}${displayValue}${suffix}`
-                  },
-                  onComplete: () => {
-                    // Remove will-change after animation completes
-                    counter.style.willChange = 'auto'
-                  }
-                })
-              }
-            },
-          })
-        }
-      })
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
-
   const stats = [
-    { value: '5.8', unit: '%', label: 'Annual Yield', description: 'Industry-leading returns in prime locations' },
-    { value: '0.0', unit: '%', label: 'Tax Rate', description: 'No property, income, or capital gains tax' },
-    { value: '15.0', unit: '%', label: 'Growth Rate', description: 'Average annual property value appreciation' },
+    { value: 5.8, unit: '%', label: 'Annual Yield', description: 'Industry-leading returns in prime locations' },
+    { value: 0.0, unit: '%', label: 'Tax Rate', description: 'No property, income, or capital gains tax' },
+    { value: 15.0, unit: '%', label: 'Growth Rate', description: 'Average annual property value appreciation' },
   ]
 
   return (
@@ -164,13 +61,12 @@ export default function Investment() {
               <div key={index}>
                 <div className="flex items-baseline gap-2 mb-3">
                   {/* Elegant Numeral with Counter Animation */}
-                  <span
-                    className="stat-counter text-6xl md:text-7xl lg:text-8xl font-display font-light text-bronze-500"
-                    data-target={stat.value}
-                    data-decimal="true"
-                  >
-                    0
-                  </span>
+                  <Counter
+                    target={stat.value}
+                    decimals={1}
+                    duration={2.0}
+                    className="text-6xl md:text-7xl lg:text-8xl font-display font-light text-bronze-500"
+                  />
                   <span className="text-3xl md:text-4xl font-display font-light text-bronze-500">
                     {stat.unit}
                   </span>
@@ -207,15 +103,37 @@ export default function Investment() {
             {/* Elegant stats bar */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 pt-12 border-t border-bronze-600/20">
               <div>
-                <div className="bottom-stat-counter text-4xl md:text-5xl font-display font-light text-bronze-500 mb-2" data-text="$2.3B">$0B</div>
+                <div className="text-4xl md:text-5xl font-display font-light text-bronze-500 mb-2">
+                  <Counter
+                    target={2.3}
+                    decimals={1}
+                    prefix="$"
+                    suffix="B"
+                    duration={2.5}
+                  />
+                </div>
                 <p className="text-sm text-ivory-500 font-light tracking-wide">Foreign Investment 2023</p>
               </div>
               <div>
-                <div className="bottom-stat-counter text-4xl md:text-5xl font-display font-light text-bronze-500 mb-2" data-text="200+">0+</div>
+                <div className="text-4xl md:text-5xl font-display font-light text-bronze-500 mb-2">
+                  <Counter
+                    target={200}
+                    decimals={0}
+                    suffix="+"
+                    duration={2.5}
+                  />
+                </div>
                 <p className="text-sm text-ivory-500 font-light tracking-wide">Nationalities Invested</p>
               </div>
               <div>
-                <div className="bottom-stat-counter text-4xl md:text-5xl font-display font-light text-bronze-500 mb-2" data-text="10 Years">0 Years</div>
+                <div className="text-4xl md:text-5xl font-display font-light text-bronze-500 mb-2">
+                  <Counter
+                    target={10}
+                    decimals={0}
+                    suffix=" Years"
+                    duration={2.5}
+                  />
+                </div>
                 <p className="text-sm text-ivory-500 font-light tracking-wide">Residence Visa Available</p>
               </div>
             </div>

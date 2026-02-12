@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, useCallback } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { getAssetPath } from '@/lib/utils'
+import { getAssetPath, debounce } from '@/lib/utils'
 
 import { motion } from 'framer-motion'
 
@@ -17,6 +17,7 @@ interface ScrollSequenceProps {
     lazyLoad?: boolean // Load images only when section is near viewport
     nextSectionBg?: 'obsidian-950' | 'obsidian-900' // Background color of next section for bottom curves
     className?: string
+    isMobile?: boolean
 }
 
 export default function ScrollSequence({
@@ -29,6 +30,7 @@ export default function ScrollSequence({
     lazyLoad = false,
     nextSectionBg = 'obsidian-900',
     className = '',
+    isMobile = false,
 }: ScrollSequenceProps) {
     const containerRef = useRef<HTMLDivElement>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -38,10 +40,18 @@ export default function ScrollSequence({
 
     // Configuration
     const padNumber = useCallback((n: number) => n.toString().padStart(4, '0'), [])
-    const getFrameUrl = useCallback((index: number) => getAssetPath(`/images/sequence/${sequenceName}/frame_${padNumber(index + 1)}.webp`), [sequenceName, padNumber])
+    const getFrameUrl = useCallback((index: number) => {
+        const folder = isMobile ? 'sequence-mobile' : 'sequence'
+        return getAssetPath(`/images/${folder}/${sequenceName}/frame_${padNumber(index + 1)}.webp`)
+    }, [sequenceName, padNumber, isMobile])
 
     // Intersection Observer for lazy loading
     useEffect(() => {
+        // Global ScrollTrigger configuration for mobile performance
+        ScrollTrigger.config({
+            ignoreMobileResize: true
+        })
+
         if (!lazyLoad || !containerRef.current) return
 
         const observer = new IntersectionObserver(
@@ -66,34 +76,143 @@ export default function ScrollSequence({
     useEffect(() => {
         if (!isInView) return // Don't load until in view (or not lazy loading)
 
+        let isActive = true
+
+        // Helper to load image with fallback
+        const loadImageWithFallback = async (index: number): Promise<HTMLImageElement | null> => {
+            return new Promise((resolve) => {
+                const img = new Image()
+                const folder = isMobile ? 'sequence-mobile' : 'sequence'
+                // Use the correct path construction
+                const primaryUrl = getAssetPath(`/images/${folder}/${sequenceName}/frame_${padNumber(index + 1)}.webp`)
+
+                img.src = primaryUrl
+
+                img.onload = () => resolve(img)
+
+                img.onerror = () => {
+                    console.warn(`Failed to load frame ${index} from ${folder}. Trying fallback.`)
+
+                    // Fallback logic: if mobile failed, try desktop. 
+                    if (isMobile) {
+                        const fallbackImg = new Image()
+                        const fallbackUrl = getAssetPath(`/images/sequence/${sequenceName}/frame_${padNumber(index + 1)}.webp`)
+                        fallbackImg.src = fallbackUrl
+                        fallbackImg.onload = () => {
+                            console.log(`Fallback successful for frame ${index}`)
+                            resolve(fallbackImg)
+                        }
+                        fallbackImg.onerror = () => {
+                            console.error(`Fallback failed for frame ${index}`)
+                            resolve(null)
+                        }
+                    } else {
+                        resolve(null)
+                    }
+                }
+            })
+        }
+
         // Preload images
         const loadImages = async () => {
             const loadedImages: HTMLImageElement[] = []
-            const promises: Promise<void>[] = []
 
-            for (let i = 0; i < frameCount; i++) {
-                promises.push(
-                    new Promise((resolve) => {
-                        const img = new Image()
-                        img.src = getFrameUrl(i)
-                        img.onload = () => {
-                            loadedImages[i] = img
-                            resolve()
-                        }
-                    })
-                )
+            // Prioritize first frame for immediate feedback
+            const firstImg = await loadImageWithFallback(0)
+
+            if (!isActive) return
+
+            if (firstImg) {
+                loadedImages[0] = firstImg
+                setImages((prev) => {
+                    if (prev.length === 0) return [...loadedImages]
+                    return prev
+                })
+                setIsLoading(false)
+            } else {
+                console.error("FATAL: First frame failed to load even with fallback")
+                // Keep loading spinner to indicate issue? Or hide?
             }
 
-            await Promise.all(promises)
-            setImages(loadedImages)
-            setIsLoading(false)
+            // Load the rest of the frames in batches
+            const BATCH_SIZE = 10
+            for (let i = 1; i < frameCount; i += BATCH_SIZE) {
+                if (!isActive) break
+
+                const batchPromises: Promise<void>[] = []
+                const end = Math.min(i + BATCH_SIZE, frameCount)
+
+                for (let j = i; j < end; j++) {
+                    batchPromises.push(
+                        loadImageWithFallback(j).then(img => {
+                            if (isActive && img) loadedImages[j] = img
+                        })
+                    )
+                }
+
+                await Promise.all(batchPromises)
+
+                if (isActive && loadedImages.length > 0) {
+                    // updates could happen here
+                }
+            }
+
+            if (isActive) {
+                setImages(loadedImages)
+                ScrollTrigger.refresh()
+            }
         }
 
         loadImages()
-    }, [getFrameUrl, frameCount, isInView])
 
+        return () => {
+            isActive = false
+        }
+    }, [getFrameUrl, frameCount, isInView, isMobile, sequenceName, padNumber])
+
+    // Use ref for images to access in render loop without dependency issues
+    const imagesRef = useRef<HTMLImageElement[]>([])
+    const currentFrameRef = useRef<number>(0)
+
+    // Update ref when images change
     useEffect(() => {
-        if (isLoading || !canvasRef.current || !containerRef.current || images.length === 0) return
+        imagesRef.current = images
+        if (!isLoading && images.length > 0) {
+            // Force a refresh once images are ready to ensure everything is synced
+            ScrollTrigger.refresh()
+
+            // Draw the first frame immediately to avoid black screen
+            const canvas = canvasRef.current
+            const context = canvas?.getContext('2d')
+            const firstImage = images[0]
+
+            if (canvas && context && firstImage && firstImage.complete) {
+                // Set dimensions if not already set (though the other effect handles this, safer to ensure)
+                canvas.width = window.innerWidth
+                canvas.height = window.innerHeight
+
+                const ratio = Math.max(canvas.width / firstImage.width, canvas.height / firstImage.height)
+                const centerShift_x = (canvas.width - firstImage.width * ratio) / 2
+                const centerShift_y = (canvas.height - firstImage.height * ratio) / 2
+
+                context.clearRect(0, 0, canvas.width, canvas.height)
+                context.drawImage(
+                    firstImage,
+                    0,
+                    0,
+                    firstImage.width,
+                    firstImage.height,
+                    centerShift_x,
+                    centerShift_y,
+                    firstImage.width * ratio,
+                    firstImage.height * ratio
+                )
+            }
+        }
+    }, [images, isLoading])
+
+    useLayoutEffect(() => {
+        if (!canvasRef.current || !containerRef.current) return
 
         const canvas = canvasRef.current
         const context = canvas.getContext('2d')
@@ -103,9 +222,19 @@ export default function ScrollSequence({
         canvas.width = window.innerWidth
         canvas.height = window.innerHeight
 
-        // Render loop
+        // Render loop with mobile frame skipping optimization
         const renderFrame = (index: number) => {
-            const img = images[Math.round(index)]
+            const imgs = imagesRef.current
+            // Mobile optimization: skip every other frame (60 effective frames vs 120)
+            let frameIndex = isMobile ? Math.round(index / 2) * 2 : Math.round(index)
+
+            // Safety check for bounds
+            if (frameIndex >= imagesRef.current.length) {
+                frameIndex = imagesRef.current.length - 1
+            }
+
+            currentFrameRef.current = frameIndex // Track current frame for resize
+            const img = imgs[frameIndex]
             if (!img || !img.complete) return
 
             // Draw image "cover" style
@@ -127,20 +256,33 @@ export default function ScrollSequence({
             )
         }
 
-        if (images[0] && images[0].complete) {
+        // Initial render if images exist
+        if (imagesRef.current[0] && imagesRef.current[0].complete) {
             renderFrame(0)
         }
 
-        // Set canvas dimensions
+        // Track last width to detect real resize (not mobile address bar)
+        let lastWidth = window.innerWidth
+
+        // Set canvas dimensions (only on width change to avoid mobile address bar interruption)
         const resizeCanvas = () => {
-            canvas.width = window.innerWidth
-            canvas.height = window.innerHeight
-            renderFrame(0) // Re-render current frame
+            const newWidth = window.innerWidth
+            // Only resize if width changed (mobile address bar only affects height)
+            if (newWidth !== lastWidth) {
+                lastWidth = newWidth
+                canvas.width = newWidth
+                canvas.height = window.innerHeight
+                renderFrame(currentFrameRef.current) // Re-render current frame
+            }
         }
 
+        // Debounced resize handler to prevent interruption during scroll
+        const debouncedResize = debounce(resizeCanvas, 150)
+
         // Initial render
-        resizeCanvas()
-        window.addEventListener('resize', resizeCanvas)
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
+        window.addEventListener('resize', debouncedResize)
 
         // Use gsap.context for proper cleanup/scoping
         const ctx = gsap.context(() => {
@@ -148,13 +290,13 @@ export default function ScrollSequence({
             const obj = { frame: 0 }
 
             // Longer scroll duration on mobile for better viewing
-            const isMobile = window.innerWidth < 768
+            // Use prop instead of local calculation for consistency
             const scrollDuration = isMobile ? '+=250%' : '+=150%'
-            const pinSpacing = !isMobile // Disable pinSpacing on mobile to prevent black gaps
+            const pinSpacing = true // Enable pinSpacing on mobile to match desktop behavior
 
             gsap.to(obj, {
                 frame: frameCount - 1,
-                snap: 'frame',
+                ...(isMobile ? {} : { snap: 'frame' }),
                 ease: 'none',
                 scrollTrigger: {
                     trigger: containerRef.current,
@@ -162,9 +304,12 @@ export default function ScrollSequence({
                     end: scrollDuration, // Extended on mobile for better UX
                     scrub: 0.5,
                     pin: true,
-                    pinSpacing: pinSpacing, // Disabled on mobile to prevent gaps
-                    anticipatePin: 1,
+                    pinType: 'fixed',
+                    pinSpacing: pinSpacing,
+                    anticipatePin: isMobile ? 0 : 1,
                     invalidateOnRefresh: true,
+                    fastScrollEnd: isMobile ? false : true,
+                    preventOverlaps: true,
                     onUpdate: (self) => renderFrame(obj.frame),
                 },
             })
@@ -198,10 +343,10 @@ export default function ScrollSequence({
         }, containerRef)
 
         return () => {
-            window.removeEventListener('resize', resizeCanvas)
+            window.removeEventListener('resize', debouncedResize)
             ctx.revert()
         }
-    }, [isLoading, images, frameCount])
+    }, [frameCount, isMobile]) // Removed isLoading and images dependency to prevent re-init
 
     const getTitleClass = () => {
         if (textColor === 'dark') return 'text-obsidian-950'
@@ -216,10 +361,21 @@ export default function ScrollSequence({
     }
 
     return (
-        <div ref={containerRef} className={`relative h-[100vh] w-full bg-obsidian-950 z-20 ${className}`} id="experience">
+        <div
+            ref={containerRef}
+            className={`relative h-[100svh] w-full bg-obsidian-950 z-20 ${className}`}
+            id="experience"
+            style={{
+                willChange: 'transform, opacity',
+                transform: 'translateZ(0)',
+                contain: 'layout paint',
+                touchAction: isMobile ? 'pan-y' : 'auto' // Allow vertical scrolling on mobile
+            }}
+        >
             <canvas
                 ref={canvasRef}
                 className="absolute inset-0 w-full h-full object-cover"
+                style={{ willChange: 'transform' }} // Optimization hint
             />
 
             {/* Overlay Content */}
