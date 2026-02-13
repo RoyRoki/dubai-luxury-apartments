@@ -32,6 +32,7 @@ export default function ScrollSequence({
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
     const [isLoading, setIsLoading] = useState(true)
+    const [loadProgress, setLoadProgress] = useState(0)
     const [isInView, setIsInView] = useState(!lazyLoad)
     const [textOpacity, setTextOpacity] = useState(0)
     const [textY, setTextY] = useState(50)
@@ -45,7 +46,7 @@ export default function ScrollSequence({
     const padNumber = useCallback((n: number) => n.toString().padStart(4, '0'), [])
 
     // px of scroll while pinned — more = slower animation feel
-    const scrollDist = frameCount * (isMobile ? 8 : 5)
+    const scrollDist = frameCount * (isMobile ? 12 : 9)
 
     // ─── Canvas render ─────────────────────────────────────────────────────────
     // CRITICAL: use setTransform (not scale) — scale() accumulates on each call
@@ -107,16 +108,13 @@ export default function ScrollSequence({
             const progress = Math.min(scrolled / totalScroll, 1)
             const targetFrame = Math.floor(progress * (frameCount - 1))
 
-            // Text: in at 0–20%, hold 20–80%, out at 80–100%
+            // Text: fade in at 0–20%, hold for the rest (no fade out)
             let opacity = 0, y = 50
             if (progress < 0.2) {
                 opacity = progress / 0.2
                 y = 50 * (1 - progress / 0.2)
-            } else if (progress < 0.8) {
-                opacity = 1; y = 0
             } else {
-                opacity = 1 - (progress - 0.8) / 0.2
-                y = -50 * ((progress - 0.8) / 0.2)
+                opacity = 1; y = 0
             }
 
             setTextOpacity(opacity)
@@ -153,7 +151,7 @@ export default function ScrollSequence({
         if (!lazyLoad || !outerRef.current) return
         const observer = new IntersectionObserver(
             (entries) => { if (entries[0].isIntersecting) setIsInView(true) },
-            { rootMargin: '50% 0px 50% 0px', threshold: 0 }
+            { rootMargin: '300% 0px 300% 0px', threshold: 0 }
         )
         observer.observe(outerRef.current)
         return () => observer.disconnect()
@@ -181,15 +179,19 @@ export default function ScrollSequence({
 
         const run = async () => {
             const loaded: HTMLImageElement[] = []
+            const BATCH = 10
+
+            // Load frame 0 first so canvas can render in background while spinner shows
             const first = await loadImg(0)
             if (!isActive) return
             if (first) {
                 loaded[0] = first
                 imagesRef.current = [...loaded]
-                setIsLoading(false)
+                setLoadProgress(Math.round(1 / frameCount * 100))
                 renderFrame(0)
             }
-            const BATCH = 10
+
+            // Load rest in batches — keep spinner until ALL done
             for (let i = 1; i < frameCount; i += BATCH) {
                 if (!isActive) break
                 const end = Math.min(i + BATCH, frameCount)
@@ -201,7 +203,11 @@ export default function ScrollSequence({
                 if (!isActive) break
                 results.forEach(({ idx, img }) => { if (img) loaded[idx] = img })
                 imagesRef.current = [...loaded]
+                setLoadProgress(Math.round(end / frameCount * 100))
             }
+
+            if (!isActive) return
+            setIsLoading(false)
         }
 
         run()
@@ -345,8 +351,19 @@ export default function ScrollSequence({
                 )}
 
                 {isLoading && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-obsidian-950 z-30">
-                        <div className="w-16 h-16 border-2 border-bronze-500/30 border-t-bronze-500 rounded-full animate-spin" />
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-obsidian-950 z-30 gap-6">
+                        <div className="w-12 h-12 border border-bronze-500/30 border-t-bronze-500 rounded-full animate-spin" />
+                        <div className="flex flex-col items-center gap-3">
+                            <div className="w-48 h-[1px] bg-obsidian-800 relative overflow-hidden">
+                                <div
+                                    className="absolute inset-y-0 left-0 bg-bronze-500 transition-all duration-300 ease-out"
+                                    style={{ width: `${loadProgress}%` }}
+                                />
+                            </div>
+                            <p className="text-[10px] text-bronze-500/50 uppercase tracking-[0.3em]">
+                                {loadProgress < 100 ? `Loading ${loadProgress}%` : 'Ready'}
+                            </p>
+                        </div>
                     </div>
                 )}
             </div>
