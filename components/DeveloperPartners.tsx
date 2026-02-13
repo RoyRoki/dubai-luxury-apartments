@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { getAssetPath } from '@/lib/utils'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { Building2, Award, Users, TrendingUp, CheckCircle, ExternalLink } from 'lucide-react'
+import { Building2, Award, Users, TrendingUp, CheckCircle, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -62,6 +62,14 @@ const developers = [
 
 export default function DeveloperPartners() {
   const sectionRef = useRef<HTMLElement>(null)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (!scrollContainerRef.current) return
+    const card = scrollContainerRef.current.querySelector<HTMLElement>('.developer-card')
+    const amount = card ? card.offsetWidth + 20 : 300
+    scrollContainerRef.current.scrollBy({ left: direction === 'left' ? -amount : amount, behavior: 'smooth' })
+  }
 
   useEffect(() => {
     if (!sectionRef.current) return
@@ -138,8 +146,67 @@ export default function DeveloperPartners() {
           </div>
         </div>
 
-        {/* Developer Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+        {/* Developer Cards — horizontal scroll on mobile, grid on md+ */}
+        <div className="md:hidden">
+          {/* Mobile scroll container */}
+          <div
+            ref={scrollContainerRef}
+            className="overflow-x-auto overflow-y-hidden snap-x snap-mandatory pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] px-4"
+            style={{ touchAction: 'pan-x' }}
+          >
+            <div className="flex gap-5">
+              {developers.map((developer, index) => (
+                <div
+                  key={index}
+                  className="developer-card group relative bg-obsidian-950/40 border border-bronze-500/10 hover:border-bronze-500/30 transition-all duration-500 overflow-hidden snap-center shrink-0 w-[calc(100vw-2rem)]"
+                >
+                  {/* Glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-bronze-500/0 via-bronze-500/0 to-bronze-500/0 group-hover:from-bronze-500/5 group-hover:via-bronze-500/10 group-hover:to-bronze-500/5 transition-all duration-500 pointer-events-none" />
+                  <div className="relative z-10 p-8">
+                    <div className="mb-6 h-16 w-full relative flex items-center justify-center bg-bronze-500/10 group-hover:bg-bronze-500/20 transition-all duration-300 px-6">
+                      <div className="relative w-full h-full">
+                        <Image src={getAssetPath(`/images/logos/${developer.logo}.webp`)} alt={`${developer.name} Logo`} fill className="object-contain opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
+                      </div>
+                    </div>
+                    <h3 className="text-xl font-light text-ivory-100 mb-3 group-hover:text-bronze-400 transition-colors duration-300">{developer.name}</h3>
+                    <p className="text-sm text-ivory-500 mb-6 font-light italic">{developer.tagline}</p>
+                    <div className="space-y-3 mb-6">
+                      <div className="flex items-start gap-2"><Building2 className="w-4 h-4 text-bronze-500 flex-shrink-0 mt-1" strokeWidth={1.5} /><p className="text-sm text-ivory-400">{developer.projects}</p></div>
+                      <div className="flex items-start gap-2"><Award className="w-4 h-4 text-bronze-500 flex-shrink-0 mt-1" strokeWidth={1.5} /><p className="text-sm text-ivory-400">{developer.awards}</p></div>
+                    </div>
+                    <div className="space-y-2 mb-6">
+                      <p className="text-xs uppercase tracking-wider text-bronze-500 mb-3">Notable Projects</p>
+                      {developer.credentials.map((c, i) => (
+                        <div key={i} className="flex items-center gap-2"><CheckCircle className="w-3 h-3 text-bronze-500" strokeWidth={2} /><p className="text-xs text-ivory-500">{c}</p></div>
+                      ))}
+                    </div>
+                    <button className="w-full flex items-center justify-center gap-2 py-3 border border-bronze-500/30 text-bronze-500 hover:bg-bronze-500/10 transition-all duration-300 text-sm uppercase tracking-wider">
+                      View Portfolio <ExternalLink className="w-4 h-4" strokeWidth={1.5} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* < SWIPE > hint bar */}
+          <div className="flex items-center justify-center gap-4 mt-3">
+            <button onClick={() => scroll('left')} aria-label="Previous" className="w-8 h-8 flex items-center justify-center border border-bronze-500/30 hover:bg-bronze-500/10 transition-all duration-300">
+              <ChevronLeft className="w-4 h-4 text-bronze-500" strokeWidth={1.5} />
+            </button>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-[1px] bg-bronze-500/40" />
+              <p className="text-xs text-ivory-600 uppercase tracking-widest">Swipe</p>
+              <div className="w-6 h-[1px] bg-bronze-500/40" />
+            </div>
+            <button onClick={() => scroll('right')} aria-label="Next" className="w-8 h-8 flex items-center justify-center border border-bronze-500/30 hover:bg-bronze-500/10 transition-all duration-300">
+              <ChevronRight className="w-4 h-4 text-bronze-500" strokeWidth={1.5} />
+            </button>
+          </div>
+        </div>
+
+        {/* Desktop grid */}
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
           {developers.map((developer, index) => (
             <div
               key={index}

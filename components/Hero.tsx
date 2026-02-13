@@ -242,7 +242,7 @@ export default function Hero() {
 
       <button
         onClick={handleScroll}
-        className="scroll-indicator absolute bottom-12 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 text-bronze-500 hover:text-bronze-400 transition-colors group"
+        className="scroll-indicator absolute bottom-28 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 text-bronze-500 hover:text-bronze-400 transition-colors group"
         aria-label="Scroll down"
       >
         <span className="text-xs uppercase tracking-[0.3em] font-light">Discover</span>

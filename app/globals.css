@@ -30,13 +30,6 @@
       touch-action: pan-y;
     }
 
-    /* Optimize animations for mobile */
-    section,
-    div {
-      transform: translateZ(0);
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-    }
   }
 
   html.lenis {

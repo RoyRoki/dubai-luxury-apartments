@@ -112,37 +112,19 @@ export default function FloorPlans() {
           </p>
         </div>
 
-        {/* Floor Plans Horizontal Scroll with Arrow Navigation */}
-        <div className="relative px-14">
-          {/* Left Arrow - Outside cards */}
-          <button
-            onClick={() => scroll('left')}
-            className="absolute -left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-obsidian-950/90 border border-bronze-500/30 hover:bg-bronze-500/20 hover:border-bronze-500 transition-all duration-300 flex items-center justify-center group"
-            aria-label="Scroll left"
-          >
-            <ChevronLeft className="w-6 h-6 text-bronze-500 group-hover:text-bronze-400" strokeWidth={1.5} />
-          </button>
-
-          {/* Right Arrow - Outside cards */}
-          <button
-            onClick={() => scroll('right')}
-            className="absolute -right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-obsidian-950/90 border border-bronze-500/30 hover:bg-bronze-500/20 hover:border-bronze-500 transition-all duration-300 flex items-center justify-center group"
-            aria-label="Scroll right"
-          >
-            <ChevronRight className="w-6 h-6 text-bronze-500 group-hover:text-bronze-400" strokeWidth={1.5} />
-          </button>
-
+        {/* Floor Plans Horizontal Scroll */}
+        <div>
           {/* Scroll Container */}
           <div
             ref={scrollContainerRef}
-            className="overflow-x-auto overflow-y-hidden -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 pb-6"
-            style={{ scrollbarWidth: 'thin', scrollbarColor: '#C09A6B20 transparent' }}
+            className="overflow-x-auto overflow-y-hidden snap-x snap-mandatory pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+            style={{ touchAction: 'pan-x' }}
           >
             <div className="cards-wrapper flex gap-6 lg:gap-8">
               {floorPlans.map((plan, index) => (
                 <div
                   key={index}
-                  className={`floor-plan-card group relative bg-obsidian-950/40 border transition-all duration-500 overflow-hidden flex-shrink-0 w-[85vw] md:w-[45vw] lg:w-[30vw] ${plan.popular || plan.luxury
+                  className={`floor-plan-card group relative bg-obsidian-950/40 border transition-all duration-500 overflow-hidden flex-shrink-0 snap-center w-[calc(100vw-2rem)] md:w-[45vw] lg:w-[30vw] ${plan.popular || plan.luxury
                     ? 'border-bronze-500/40 shadow-lg shadow-bronze-500/10'
                     : 'border-bronze-500/10 hover:border-bronze-500/30'
                     }`}
@@ -233,6 +215,21 @@ export default function FloorPlans() {
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* < SWIPE > hint bar */}
+          <div className="flex items-center justify-center gap-4 mt-3">
+            <button onClick={() => scroll('left')} aria-label="Previous" className="w-8 h-8 flex items-center justify-center border border-bronze-500/30 hover:bg-bronze-500/10 transition-all duration-300">
+              <ChevronLeft className="w-4 h-4 text-bronze-500" strokeWidth={1.5} />
+            </button>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-[1px] bg-bronze-500/40" />
+              <p className="text-xs text-ivory-600 uppercase tracking-widest">Swipe</p>
+              <div className="w-6 h-[1px] bg-bronze-500/40" />
+            </div>
+            <button onClick={() => scroll('right')} aria-label="Next" className="w-8 h-8 flex items-center justify-center border border-bronze-500/30 hover:bg-bronze-500/10 transition-all duration-300">
+              <ChevronRight className="w-4 h-4 text-bronze-500" strokeWidth={1.5} />
+            </button>
           </div>
         </div>
 

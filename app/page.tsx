@@ -100,7 +100,7 @@ export default function Home() {
       <LuxuryCursor />
       <Header lenisInstance={lenisRef} />
 
-      <main className="overflow-x-hidden bg-obsidian-950 relative">
+      <main className="bg-obsidian-950 relative" style={{ overflowX: 'clip' }}>
         {/* Animated Noise Texture Background */}
         <div className="animated-noise fixed inset-0 z-0" />
 
@@ -165,6 +165,7 @@ export default function Home() {
           subtitle="Step into a world of uncompromised elegance"
           frameCount={120}
           curveVariant='wave-top'
+          textColor="deep-gold"
           lazyLoad={true}
           nextSectionBg="obsidian-950"
           isMobile={isMobile}
@@ -214,6 +215,7 @@ export default function Home() {
           subtitle="In a city of millions, only one address calls to you"
           frameCount={120}
           curveVariant='layered-top'
+          textColor="deep-gold"
           lazyLoad={true}
           nextSectionBg="obsidian-950"
           isMobile={isMobile}
@@ -263,6 +265,7 @@ export default function Home() {
           subtitle="Morning coffee to midnight reflection—your sanctuary evolves"
           frameCount={120}
           curveVariant='layered-depth'
+          textColor="deep-gold"
           lazyLoad={true}
           nextSectionBg="obsidian-950"
           isMobile={isMobile}
