@@ -46,7 +46,7 @@ export default function ScrollSequence({
     const padNumber = useCallback((n: number) => n.toString().padStart(4, '0'), [])
 
     // px of scroll while pinned — more = slower animation feel
-    const scrollDist = frameCount * (isMobile ? 12 : 9)
+    const scrollDist = frameCount * (isMobile ? 8 : 9)
 
     // ─── Canvas render ─────────────────────────────────────────────────────────
     // CRITICAL: use setTransform (not scale) — scale() accumulates on each call

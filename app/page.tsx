@@ -17,6 +17,7 @@ import FAQ from '@/components/FAQ'
 import ViewingForm from '@/components/ViewingForm'
 import Footer from '@/components/Footer'
 import LuxuryCursor from '@/components/LuxuryCursor'
+import LoadingScreen from '@/components/LoadingScreen'
 import EditorialSection from '@/components/EditorialSection'
 import CuratedInteriorsSection from '@/components/CuratedInteriorsSection'
 import DeveloperPartners from '@/components/DeveloperPartners'
@@ -27,6 +28,7 @@ import NeighborhoodGuide from '@/components/NeighborhoodGuide'
 export default function Home() {
   const lenisRef = useRef<Lenis | null>(null)
   const [isMobile, setIsMobile] = useState(false)
+  const [isPageReady, setIsPageReady] = useState(false)
 
   useEffect(() => {
     // Check if mobile on mount
@@ -97,7 +99,14 @@ export default function Home() {
 
   return (
     <>
+      <LoadingScreen onComplete={() => setIsPageReady(true)} />
       <LuxuryCursor />
+      <div
+        style={{
+          opacity: isPageReady ? 1 : 0,
+          transition: 'opacity 0.5s ease',
+        }}
+      >
       <Header lenisInstance={lenisRef} />
 
       <main className="bg-obsidian-950 relative" style={{ overflowX: 'clip' }}>
@@ -277,6 +286,7 @@ export default function Home() {
       </main>
 
       <Footer />
+      </div>
     </>
   )
 }
