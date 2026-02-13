@@ -222,7 +222,7 @@ export default function Hero() {
       {/* Content Layer */}
       <div className="relative z-20 h-full flex items-end justify-center pb-32 md:pb-40">
         <div className="container-editorial text-center">
-          {/* Buttons moved to bottom */}
+          {/* Buttons */}
           <div className="hero-cta flex flex-col sm:flex-row items-center justify-center gap-6">
             <button
               onClick={(e) => handleButtonClick(e, handleScroll)}
@@ -237,17 +237,18 @@ export default function Hero() {
               <span className="relative z-10">Enquire Discreetly</span>
             </button>
           </div>
+
+          {/* Discover — below buttons */}
+          <button
+            onClick={handleScroll}
+            className="scroll-indicator mt-10 flex flex-col items-center gap-3 text-bronze-500 hover:text-bronze-400 transition-colors group mx-auto"
+            aria-label="Scroll down"
+          >
+            <span className="text-xs uppercase tracking-[0.3em] font-light">Discover</span>
+            <div className="w-[1px] h-12 bg-gradient-to-b from-bronze-500/60 to-transparent group-hover:h-16 transition-all duration-500" />
+          </button>
         </div>
       </div>
-
-      <button
-        onClick={handleScroll}
-        className="scroll-indicator absolute bottom-28 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 text-bronze-500 hover:text-bronze-400 transition-colors group"
-        aria-label="Scroll down"
-      >
-        <span className="text-xs uppercase tracking-[0.3em] font-light">Discover</span>
-        <div className="w-[1px] h-16 bg-gradient-to-b from-bronze-500/60 to-transparent group-hover:h-20 transition-all duration-500" />
-      </button>
 
       {/* Curved Divider */}
       <div className="absolute bottom-0 left-0 w-full z-[15] translate-y-[1px] pointer-events-none">
