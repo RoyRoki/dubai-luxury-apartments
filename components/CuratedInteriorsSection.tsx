@@ -177,14 +177,14 @@ export default function CuratedInteriorsSection() {
             {/* Arrow Navigation */}
             <button
               onClick={() => scroll(smartHomeRef, 'left')}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-obsidian-900/90 border border-bronze-500/30 hover:bg-bronze-500/20 hover:border-bronze-500 transition-all duration-300 flex items-center justify-center"
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-obsidian-900/90 hover:bg-bronze-500/20 transition-all duration-300 flex items-center justify-center"
               aria-label="Scroll left"
             >
               <ChevronLeft className="w-5 h-5 text-bronze-500" strokeWidth={1.5} />
             </button>
             <button
               onClick={() => scroll(smartHomeRef, 'right')}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-obsidian-900/90 border border-bronze-500/30 hover:bg-bronze-500/20 hover:border-bronze-500 transition-all duration-300 flex items-center justify-center"
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-obsidian-900/90 hover:bg-bronze-500/20 transition-all duration-300 flex items-center justify-center"
               aria-label="Scroll right"
             >
               <ChevronRight className="w-5 h-5 text-bronze-500" strokeWidth={1.5} />
@@ -193,7 +193,7 @@ export default function CuratedInteriorsSection() {
             <div
               ref={smartHomeRef}
               className="overflow-x-auto overflow-y-hidden -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 pb-6"
-              style={{ scrollbarWidth: 'thin', scrollbarColor: '#C09A6B20 transparent' }}
+              style={{ scrollbarWidth: 'thin', scrollbarColor: '#C09A6B20 transparent', touchAction: 'pan-x pan-y' }}
             >
               <div className="cards-wrapper flex gap-6 lg:gap-8">
                 {features.smartHome.map((feature, index) => {
@@ -201,7 +201,8 @@ export default function CuratedInteriorsSection() {
                   return (
                     <div
                       key={index}
-                      className="feature-card group relative p-6 lg:p-8 bg-obsidian-900/40 border border-bronze-500/10 hover:border-bronze-500/30 transition-all duration-500 cursor-pointer flex-shrink-0 w-[80vw] md:w-[40vw] lg:w-[25vw]"
+                      style={{ touchAction: 'pan-x pan-y' }}
+                      className="feature-card group relative p-6 lg:p-8 bg-obsidian-900/40 border border-bronze-500/10 hover:border-bronze-500/30 transition-all duration-500 cursor-pointer flex-shrink-0 w-[80vw] md:w-[40vw] lg:w-[25vw] [&_*]:!touch-[pan-x_pan-y]"
                     >
                       {/* Glow effect on hover */}
                       <div className="absolute inset-0 bg-gradient-to-br from-bronze-500/0 via-bronze-500/0 to-bronze-500/0 group-hover:from-bronze-500/5 group-hover:via-bronze-500/10 group-hover:to-bronze-500/5 transition-all duration-500 pointer-events-none" />
@@ -234,20 +235,20 @@ export default function CuratedInteriorsSection() {
           <div className="relative px-12 mt-12">
             <button
               onClick={() => scroll(materialsRef, 'left')}
-              className="absolute -left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-obsidian-900/90 border border-bronze-500/30 hover:bg-bronze-500/20 hover:border-bronze-500 transition-all duration-300 flex items-center justify-center"
+              className="absolute -left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-obsidian-900/90 hover:bg-bronze-500/20 transition-all duration-300 flex items-center justify-center"
             >
               <ChevronLeft className="w-5 h-5 text-bronze-500" strokeWidth={1.5} />
             </button>
             <button
               onClick={() => scroll(materialsRef, 'right')}
-              className="absolute -right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-obsidian-900/90 border border-bronze-500/30 hover:bg-bronze-500/20 hover:border-bronze-500 transition-all duration-300 flex items-center justify-center"
+              className="absolute -right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-obsidian-900/90 hover:bg-bronze-500/20 transition-all duration-300 flex items-center justify-center"
             >
               <ChevronRight className="w-5 h-5 text-bronze-500" strokeWidth={1.5} />
             </button>
             <div
               ref={materialsRef}
               className="overflow-x-auto overflow-y-hidden -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 pb-6"
-              style={{ scrollbarWidth: 'thin', scrollbarColor: '#C09A6B20 transparent' }}
+              style={{ scrollbarWidth: 'thin', scrollbarColor: '#C09A6B20 transparent', touchAction: 'pan-x pan-y' }}
             >
               <div className="cards-wrapper flex gap-6 lg:gap-8">
                 {features.materials.map((feature, index) => {
@@ -255,7 +256,8 @@ export default function CuratedInteriorsSection() {
                   return (
                     <div
                       key={index}
-                      className="feature-card group relative p-6 lg:p-8 bg-obsidian-900/40 border border-bronze-500/10 hover:border-bronze-500/30 transition-all duration-500 cursor-pointer flex-shrink-0 w-[80vw] md:w-[40vw] lg:w-[25vw]"
+                      style={{ touchAction: 'pan-x pan-y' }}
+                      className="feature-card group relative p-6 lg:p-8 bg-obsidian-900/40 border border-bronze-500/10 hover:border-bronze-500/30 transition-all duration-500 cursor-pointer flex-shrink-0 w-[80vw] md:w-[40vw] lg:w-[25vw] [&_*]:!touch-[pan-x_pan-y]"
                     >
                       <div className="absolute inset-0 bg-gradient-to-br from-bronze-500/0 via-bronze-500/0 to-bronze-500/0 group-hover:from-bronze-500/5 group-hover:via-bronze-500/10 group-hover:to-bronze-500/5 transition-all duration-500 pointer-events-none" />
 
@@ -287,20 +289,20 @@ export default function CuratedInteriorsSection() {
           <div className="relative px-12 mt-12">
             <button
               onClick={() => scroll(furnitureRef, 'left')}
-              className="absolute -left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-obsidian-900/90 border border-bronze-500/30 hover:bg-bronze-500/20 hover:border-bronze-500 transition-all duration-300 flex items-center justify-center"
+              className="absolute -left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-obsidian-900/90 hover:bg-bronze-500/20 transition-all duration-300 flex items-center justify-center"
             >
               <ChevronLeft className="w-5 h-5 text-bronze-500" strokeWidth={1.5} />
             </button>
             <button
               onClick={() => scroll(furnitureRef, 'right')}
-              className="absolute -right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-obsidian-900/90 border border-bronze-500/30 hover:bg-bronze-500/20 hover:border-bronze-500 transition-all duration-300 flex items-center justify-center"
+              className="absolute -right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-obsidian-900/90 hover:bg-bronze-500/20 transition-all duration-300 flex items-center justify-center"
             >
               <ChevronRight className="w-5 h-5 text-bronze-500" strokeWidth={1.5} />
             </button>
             <div
               ref={furnitureRef}
               className="overflow-x-auto overflow-y-hidden -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 pb-6"
-              style={{ scrollbarWidth: 'thin', scrollbarColor: '#C09A6B20 transparent' }}
+              style={{ scrollbarWidth: 'thin', scrollbarColor: '#C09A6B20 transparent', touchAction: 'pan-x pan-y' }}
             >
               <div className="cards-wrapper flex gap-6 lg:gap-8">
                 {features.furniture.map((feature, index) => {
@@ -308,7 +310,8 @@ export default function CuratedInteriorsSection() {
                   return (
                     <div
                       key={index}
-                      className="feature-card group relative p-6 lg:p-8 bg-obsidian-900/40 border border-bronze-500/10 hover:border-bronze-500/30 transition-all duration-500 cursor-pointer flex-shrink-0 w-[80vw] md:w-[40vw] lg:w-[25vw]"
+                      style={{ touchAction: 'pan-x pan-y' }}
+                      className="feature-card group relative p-6 lg:p-8 bg-obsidian-900/40 border border-bronze-500/10 hover:border-bronze-500/30 transition-all duration-500 cursor-pointer flex-shrink-0 w-[80vw] md:w-[40vw] lg:w-[25vw] [&_*]:!touch-[pan-x_pan-y]"
                     >
                       <div className="absolute inset-0 bg-gradient-to-br from-bronze-500/0 via-bronze-500/0 to-bronze-500/0 group-hover:from-bronze-500/5 group-hover:via-bronze-500/10 group-hover:to-bronze-500/5 transition-all duration-500 pointer-events-none" />
 
@@ -340,20 +343,20 @@ export default function CuratedInteriorsSection() {
           <div className="relative px-12 mt-12">
             <button
               onClick={() => scroll(sustainabilityRef, 'left')}
-              className="absolute -left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-obsidian-900/90 border border-bronze-500/30 hover:bg-bronze-500/20 hover:border-bronze-500 transition-all duration-300 flex items-center justify-center"
+              className="absolute -left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-obsidian-900/90 hover:bg-bronze-500/20 transition-all duration-300 flex items-center justify-center"
             >
               <ChevronLeft className="w-5 h-5 text-bronze-500" strokeWidth={1.5} />
             </button>
             <button
               onClick={() => scroll(sustainabilityRef, 'right')}
-              className="absolute -right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-obsidian-900/90 border border-bronze-500/30 hover:bg-bronze-500/20 hover:border-bronze-500 transition-all duration-300 flex items-center justify-center"
+              className="absolute -right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-obsidian-900/90 hover:bg-bronze-500/20 transition-all duration-300 flex items-center justify-center"
             >
               <ChevronRight className="w-5 h-5 text-bronze-500" strokeWidth={1.5} />
             </button>
             <div
               ref={sustainabilityRef}
               className="overflow-x-auto overflow-y-hidden -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 pb-6"
-              style={{ scrollbarWidth: 'thin', scrollbarColor: '#C09A6B20 transparent' }}
+              style={{ scrollbarWidth: 'thin', scrollbarColor: '#C09A6B20 transparent', touchAction: 'pan-x pan-y' }}
             >
               <div className="cards-wrapper flex gap-6 lg:gap-8">
                 {features.sustainability.map((feature, index) => {
@@ -361,7 +364,8 @@ export default function CuratedInteriorsSection() {
                   return (
                     <div
                       key={index}
-                      className="feature-card group relative p-6 lg:p-8 bg-obsidian-900/40 border border-bronze-500/10 hover:border-bronze-500/30 transition-all duration-500 cursor-pointer flex-shrink-0 w-[80vw] md:w-[40vw] lg:w-[25vw]"
+                      style={{ touchAction: 'pan-x pan-y' }}
+                      className="feature-card group relative p-6 lg:p-8 bg-obsidian-900/40 border border-bronze-500/10 hover:border-bronze-500/30 transition-all duration-500 cursor-pointer flex-shrink-0 w-[80vw] md:w-[40vw] lg:w-[25vw] [&_*]:!touch-[pan-x_pan-y]"
                     >
                       <div className="absolute inset-0 bg-gradient-to-br from-bronze-500/0 via-bronze-500/0 to-bronze-500/0 group-hover:from-bronze-500/5 group-hover:via-bronze-500/10 group-hover:to-bronze-500/5 transition-all duration-500 pointer-events-none" />
 

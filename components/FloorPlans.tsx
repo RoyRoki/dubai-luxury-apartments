@@ -118,13 +118,14 @@ export default function FloorPlans() {
           <div
             ref={scrollContainerRef}
             className="overflow-x-auto overflow-y-hidden snap-x snap-mandatory pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-            style={{ touchAction: 'pan-x' }}
+            style={{ touchAction: 'pan-x pan-y' }}
           >
             <div className="cards-wrapper flex gap-6 lg:gap-8">
               {floorPlans.map((plan, index) => (
                 <div
                   key={index}
-                  className={`floor-plan-card group relative bg-obsidian-950/40 border transition-all duration-500 overflow-hidden flex-shrink-0 snap-center w-[calc(100vw-2rem)] md:w-[45vw] lg:w-[30vw] ${plan.popular || plan.luxury
+                  style={{ touchAction: 'pan-x pan-y' }}
+                  className={`floor-plan-card group relative bg-obsidian-950/40 border transition-all duration-500 overflow-hidden flex-shrink-0 snap-center w-[85vw] md:w-[45vw] lg:w-[30vw] [&_*]:!touch-[pan-x_pan-y] ${plan.popular || plan.luxury
                     ? 'border-bronze-500/40 shadow-lg shadow-bronze-500/10'
                     : 'border-bronze-500/10 hover:border-bronze-500/30'
                     }`}
@@ -155,7 +156,7 @@ export default function FloorPlans() {
                     <div className="absolute inset-0 bg-gradient-to-t from-obsidian-950/80 to-transparent" />
                   </div>
 
-                  <div className="relative z-10 p-6 lg:p-8">
+                  <div className="relative z-10 p-6 lg:p-8 text-center lg:text-left">
                     {/* Type & Size */}
                     <div className="mb-6">
                       <h3 className="text-2xl lg:text-3xl font-light text-ivory-100 mb-2 group-hover:text-bronze-400 transition-colors duration-300">
@@ -165,7 +166,7 @@ export default function FloorPlans() {
                     </div>
 
                     {/* Specs */}
-                    <div className="flex items-center gap-6 mb-6 pb-6 border-b border-bronze-500/10">
+                    <div className="flex items-center justify-center lg:justify-start gap-6 mb-6 pb-6 border-b border-bronze-500/10">
                       {plan.bedrooms > 0 && (
                         <div className="flex items-center gap-2">
                           <Bed className="w-5 h-5 text-bronze-500" strokeWidth={1.5} />
@@ -185,7 +186,7 @@ export default function FloorPlans() {
                     {/* Features */}
                     <ul className="space-y-2 mb-6">
                       {plan.features.map((feature, i) => (
-                        <li key={i} className="flex items-center gap-2 text-sm text-ivory-400">
+                        <li key={i} className="flex items-center justify-center lg:justify-start gap-2 text-sm text-ivory-400">
                           <ChevronRight className="w-4 h-4 text-bronze-500" strokeWidth={2} />
                           {feature}
                         </li>

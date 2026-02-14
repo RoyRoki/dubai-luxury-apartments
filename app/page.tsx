@@ -78,7 +78,6 @@ export default function Home() {
       ScrollTrigger.normalizeScroll({
         allowNestedScroll: true,
         lockAxis: false,
-        momentum: (self: { velocityY: number }) => Math.min(3, self.velocityY / 1000), // Reduce momentum on mobile
         type: 'touch,wheel,pointer',
       })
 
@@ -107,185 +106,185 @@ export default function Home() {
           transition: 'opacity 0.5s ease',
         }}
       >
-      <Header lenisInstance={lenisRef} />
+        <Header lenisInstance={lenisRef} />
 
-      <main className="bg-obsidian-950 relative" style={{ overflowX: 'clip' }}>
-        {/* Animated Noise Texture Background */}
-        <div className="animated-noise fixed inset-0 z-0" />
+        <main className="bg-obsidian-950 relative" style={{ overflowX: 'clip' }}>
+          {/* Animated Noise Texture Background */}
+          <div className="animated-noise fixed inset-0 z-0" />
 
-        <Hero />
+          <Hero />
 
-        {/* 1. Genesis */}
-        {/* 1. Genesis */}
-        <ScrollSequence
-          key={isMobile ? 'mobile-1' : 'desktop-1'}
-          sequenceName="Sketch_to_Luxury_Home_Evolution"
-          title="The Genesis"
-          subtitle="From ink and imagination to architectural poetry"
-          frameCount={120}
-          curveVariant="wave-flow"
-          nextSectionBg="obsidian-900"
-          isMobile={isMobile}
-        />
+          {/* 1. Genesis */}
+          {/* 1. Genesis */}
+          <ScrollSequence
+            key={isMobile ? 'mobile-1' : 'desktop-1'}
+            sequenceName="Sketch_to_Luxury_Home_Evolution"
+            title="The Genesis"
+            subtitle="From ink and imagination to architectural poetry"
+            frameCount={120}
+            curveVariant="wave-flow"
+            nextSectionBg="obsidian-900"
+            isMobile={isMobile}
+          />
 
-        <FeaturedProperties />
+          <FeaturedProperties />
 
-        <DeveloperPartners />
+          <DeveloperPartners />
 
-        {/* 2. The Blueprint */}
-        {/* 2. The Blueprint */}
-        <ScrollSequence
-          key={isMobile ? 'mobile-2' : 'desktop-2'}
-          sequenceName="Video_Prompt_Revision_and_Generation"
-          title="The Blueprint"
-          subtitle="Where vision meets precision"
-          frameCount={120}
-          curveVariant='geometric-sharp'
-          nextSectionBg="obsidian-950"
-          isMobile={isMobile}
-        />
+          {/* 2. The Blueprint */}
+          {/* 2. The Blueprint */}
+          <ScrollSequence
+            key={isMobile ? 'mobile-2' : 'desktop-2'}
+            sequenceName="Video_Prompt_Revision_and_Generation"
+            title="The Blueprint"
+            subtitle="Where vision meets precision"
+            frameCount={120}
+            curveVariant='geometric-sharp'
+            nextSectionBg="obsidian-950"
+            isMobile={isMobile}
+          />
 
-        <FloorPlans />
+          <FloorPlans />
 
-        <PaymentPlans />
+          <PaymentPlans />
 
-        {/* 3. Time's Embrace */}
-        {/* 3. Time's Embrace */}
-        <ScrollSequence
-          key={isMobile ? 'mobile-3' : 'desktop-3'}
-          sequenceName="Construction_to_Luxury_Transformation_Video"
-          title="Time's Embrace"
-          subtitle="Witness raw earth sculpted into timeless luxury"
-          frameCount={120}
-          curveVariant="layered-depth"
-          textColor="dark"
-          nextSectionBg="obsidian-950"
-          isMobile={isMobile}
-        />
+          {/* 3. Time's Embrace */}
+          {/* 3. Time's Embrace */}
+          <ScrollSequence
+            key={isMobile ? 'mobile-3' : 'desktop-3'}
+            sequenceName="Construction_to_Luxury_Transformation_Video"
+            title="Time's Embrace"
+            subtitle="Witness raw earth sculpted into timeless luxury"
+            frameCount={120}
+            curveVariant="layered-depth"
+            textColor="dark"
+            nextSectionBg="obsidian-950"
+            isMobile={isMobile}
+          />
 
-        <Investment />
+          <Investment />
 
-        {/* 4. The Arrival */}
-        {/* 4. The Arrival */}
-        <ScrollSequence
-          key={isMobile ? 'mobile-4' : 'desktop-4'}
-          sequenceName="Luxury_Home_Entry_Transition"
-          title="The Arrival"
-          subtitle="Step into a world of uncompromised elegance"
-          frameCount={120}
-          curveVariant='wave-top'
-          textColor="deep-gold"
-          lazyLoad={true}
-          nextSectionBg="obsidian-950"
-          isMobile={isMobile}
-        />
+          {/* 4. The Arrival */}
+          {/* 4. The Arrival */}
+          <ScrollSequence
+            key={isMobile ? 'mobile-4' : 'desktop-4'}
+            sequenceName="Luxury_Home_Entry_Transition"
+            title="The Arrival"
+            subtitle="Step into a world of uncompromised elegance"
+            frameCount={120}
+            curveVariant='wave-top'
+            textColor="deep-gold"
+            lazyLoad={true}
+            nextSectionBg="obsidian-950"
+            isMobile={isMobile}
+          />
 
-        <Location />
+          <Location />
 
-        {/* 5. Sky-High Haven */}
-        {/* 5. Sky-High Haven */}
-        <ScrollSequence
-          key={isMobile ? 'mobile-5' : 'desktop-5'}
-          sequenceName="Drone_Portal_to_Luxury_Suite"
-          title="Sky-High Haven"
-          subtitle="Elevated living, redefined"
-          frameCount={120}
-          curveVariant='geometric-sharp'
-          lazyLoad={true}
-          nextSectionBg="obsidian-950"
-          className="z-40"
-          isMobile={isMobile}
-        />
+          {/* 5. Sky-High Haven */}
+          {/* 5. Sky-High Haven */}
+          <ScrollSequence
+            key={isMobile ? 'mobile-5' : 'desktop-5'}
+            sequenceName="Drone_Portal_to_Luxury_Suite"
+            title="Sky-High Haven"
+            subtitle="Elevated living, redefined"
+            frameCount={120}
+            curveVariant='geometric-sharp'
+            lazyLoad={true}
+            nextSectionBg="obsidian-950"
+            className="z-40"
+            isMobile={isMobile}
+          />
 
-        <NeighborhoodGuide />
+          <NeighborhoodGuide />
 
-        {/* 6. Inner Sanctum */}
-        {/* 6. Inner Sanctum */}
-        <ScrollSequence
-          key={isMobile ? 'mobile-6' : 'desktop-6'}
-          sequenceName="Dubai_Luxury_Interior_Drone_Reveal"
-          title="Inner Sanctum"
-          subtitle="A private retreat above the clouds"
-          frameCount={120}
-          curveVariant='geometric-top'
-          lazyLoad={true}
-          nextSectionBg="obsidian-900"
-          isMobile={isMobile}
-        />
+          {/* 6. Inner Sanctum */}
+          {/* 6. Inner Sanctum */}
+          <ScrollSequence
+            key={isMobile ? 'mobile-6' : 'desktop-6'}
+            sequenceName="Dubai_Luxury_Interior_Drone_Reveal"
+            title="Inner Sanctum"
+            subtitle="A private retreat above the clouds"
+            frameCount={120}
+            curveVariant='geometric-top'
+            lazyLoad={true}
+            nextSectionBg="obsidian-900"
+            isMobile={isMobile}
+          />
 
-        <Amenities />
+          <Amenities />
 
-        {/* 7. Your Constellation */}
-        {/* 7. Your Constellation */}
-        <ScrollSequence
-          key={isMobile ? 'mobile-7' : 'desktop-7'}
-          sequenceName="Dubai_Hyper_Zoom_To_Home"
-          title="Your Constellation"
-          subtitle="In a city of millions, only one address calls to you"
-          frameCount={120}
-          curveVariant='layered-top'
-          textColor="deep-gold"
-          lazyLoad={true}
-          nextSectionBg="obsidian-950"
-          isMobile={isMobile}
-        />
+          {/* 7. Your Constellation */}
+          {/* 7. Your Constellation */}
+          <ScrollSequence
+            key={isMobile ? 'mobile-7' : 'desktop-7'}
+            sequenceName="Dubai_Hyper_Zoom_To_Home"
+            title="Your Constellation"
+            subtitle="In a city of millions, only one address calls to you"
+            frameCount={120}
+            curveVariant='layered-top'
+            textColor="deep-gold"
+            lazyLoad={true}
+            nextSectionBg="obsidian-950"
+            isMobile={isMobile}
+          />
 
-        <Testimonials />
+          <Testimonials />
 
-        {/* 8. The Mirror Moment */}
-        {/* 8. The Mirror Moment */}
-        <ScrollSequence
-          key={isMobile ? 'mobile-8' : 'desktop-8'}
-          sequenceName="Reflective_Reveal_Video_Generation"
-          title="The Mirror Moment"
-          subtitle="Beauty reflecting beauty—infinity in every surface"
-          frameCount={120}
-          curveVariant='wave-flow'
-          lazyLoad={true}
-          nextSectionBg="obsidian-950"
-          isMobile={isMobile}
-        />
+          {/* 8. The Mirror Moment */}
+          {/* 8. The Mirror Moment */}
+          <ScrollSequence
+            key={isMobile ? 'mobile-8' : 'desktop-8'}
+            sequenceName="Reflective_Reveal_Video_Generation"
+            title="The Mirror Moment"
+            subtitle="Beauty reflecting beauty—infinity in every surface"
+            frameCount={120}
+            curveVariant='wave-flow'
+            lazyLoad={true}
+            nextSectionBg="obsidian-950"
+            isMobile={isMobile}
+          />
 
-        <CuratedInteriorsSection />
+          <CuratedInteriorsSection />
 
-        {/* 9. Living Art */}
-        {/* 9. Living Art */}
-        <ScrollSequence
-          key={isMobile ? 'mobile-9' : 'desktop-9'}
-          sequenceName="Ghost_Furniture_Video_Generation"
-          title="Living Art"
-          subtitle="Curated spaces that breathe and inspire"
-          frameCount={120}
-          curveVariant='layered-depth'
-          lazyLoad={true}
-          nextSectionBg="obsidian-950"
-          isMobile={isMobile}
-        />
+          {/* 9. Living Art */}
+          {/* 9. Living Art */}
+          <ScrollSequence
+            key={isMobile ? 'mobile-9' : 'desktop-9'}
+            sequenceName="Ghost_Furniture_Video_Generation"
+            title="Living Art"
+            subtitle="Curated spaces that breathe and inspire"
+            frameCount={120}
+            curveVariant='layered-depth'
+            lazyLoad={true}
+            nextSectionBg="obsidian-950"
+            isMobile={isMobile}
+          />
 
-        <FAQ />
+          <FAQ />
 
-        {/* 11. The Golden Hours */}
-        {/* 11. The Golden Hours */}
-        {/* 11. The Golden Hours */}
-        <ScrollSequence
-          key={isMobile ? 'mobile-10' : 'desktop-10'}
-          sequenceName="Day_to_Night_Window_Wipe_Transition"
-          title="The Golden Hours"
-          subtitle="Morning coffee to midnight reflection—your sanctuary evolves"
-          frameCount={120}
-          curveVariant='layered-depth'
-          textColor="deep-gold"
-          lazyLoad={true}
-          nextSectionBg="obsidian-950"
-          isMobile={isMobile}
-        />
+          {/* 11. The Golden Hours */}
+          {/* 11. The Golden Hours */}
+          {/* 11. The Golden Hours */}
+          <ScrollSequence
+            key={isMobile ? 'mobile-10' : 'desktop-10'}
+            sequenceName="Day_to_Night_Window_Wipe_Transition"
+            title="The Golden Hours"
+            subtitle="Morning coffee to midnight reflection—your sanctuary evolves"
+            frameCount={120}
+            curveVariant='layered-depth'
+            textColor="deep-gold"
+            lazyLoad={true}
+            nextSectionBg="obsidian-950"
+            isMobile={isMobile}
+          />
 
-        <div className="container-custom px-4 md:px-6 lg:px-8 py-20 lg:py-32" id="contact">
-          <ViewingForm />
-        </div>
-      </main>
+          <div className="container-custom px-4 md:px-6 lg:px-8 py-20 lg:py-32" id="contact">
+            <ViewingForm />
+          </div>
+        </main>
 
-      <Footer />
+        <Footer />
       </div>
     </>
   )

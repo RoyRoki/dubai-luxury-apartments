@@ -25,7 +25,7 @@ export default function Investment() {
           <p className="text-bronze-500 text-xs md:text-sm uppercase tracking-[0.3em] font-light mb-6">
             Generational Wealth
           </p>
-          <h2 className="heading-xl mb-6">
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-display font-light tracking-[0.08em] uppercase mb-6">
             <span className="text-ivory-300">Investment</span>
             <br />
             <span className="text-bronze">Excellence</span>

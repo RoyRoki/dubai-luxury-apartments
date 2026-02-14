@@ -152,13 +152,14 @@ export default function DeveloperPartners() {
           <div
             ref={scrollContainerRef}
             className="overflow-x-auto overflow-y-hidden snap-x snap-mandatory pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] px-4"
-            style={{ touchAction: 'pan-x' }}
+            style={{ touchAction: 'pan-x pan-y' }}
           >
             <div className="flex gap-5">
               {developers.map((developer, index) => (
                 <div
                   key={index}
-                  className="developer-card group relative bg-obsidian-950/40 border border-bronze-500/10 hover:border-bronze-500/30 transition-all duration-500 overflow-hidden snap-center shrink-0 w-[calc(100vw-2rem)]"
+                  style={{ touchAction: 'pan-x pan-y' }}
+                  className="developer-card group relative bg-obsidian-950/40 border border-bronze-500/10 hover:border-bronze-500/30 transition-all duration-500 overflow-hidden snap-center shrink-0 w-[calc(100vw-2rem)] [&_*]:!touch-[pan-x_pan-y]"
                 >
                   {/* Glow effect */}
                   <div className="absolute inset-0 bg-gradient-to-br from-bronze-500/0 via-bronze-500/0 to-bronze-500/0 group-hover:from-bronze-500/5 group-hover:via-bronze-500/10 group-hover:to-bronze-500/5 transition-all duration-500 pointer-events-none" />

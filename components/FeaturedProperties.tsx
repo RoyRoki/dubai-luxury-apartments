@@ -69,7 +69,7 @@ export default function FeaturedProperties() {
           <p className="text-bronze-500 text-xs md:text-sm uppercase tracking-[0.3em] font-light mb-6">
             Curated Collection
           </p>
-          <h2 className="heading-xl mb-6">
+          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-[0.08em] uppercase mb-6">
             <span className="text-ivory-300">Legendary</span>
             <br />
             <span className="text-bronze">Residences</span>
@@ -79,8 +79,24 @@ export default function FeaturedProperties() {
           </p>
         </div>
 
-        {/* Asymmetric Masonry Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 mb-16">
+        {/* Mobile Horizontal Scroll (Slider) */}
+        <div
+          className="md:hidden flex overflow-x-auto overflow-y-hidden snap-x snap-mandatory pb-8 gap-4 -mx-4 px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          style={{ touchAction: 'pan-x pan-y' }}
+        >
+          {properties.map((property, index) => (
+            <div
+              key={index}
+              className="snap-center shrink-0 w-[85vw] property-card [&_*]:!touch-[pan-x_pan-y]"
+              style={{ touchAction: 'pan-x pan-y' }}
+            >
+              <PropertyCard {...property} size="large" />
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Asymmetric Masonry Grid */}
+        <div className="hidden md:grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 mb-16">
           {/* Row 1: Large Featured + Medium */}
           <div className="property-card lg:col-span-8">
             <PropertyCard {...properties[0]} size="large" />

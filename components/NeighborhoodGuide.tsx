@@ -118,7 +118,7 @@ export default function NeighborhoodGuide() {
           <p className="text-bronze-500 text-xs md:text-sm uppercase tracking-[0.3em] font-light mb-6">
             Connected Living
           </p>
-          <h2 className="heading-xl mb-8 text-ivory-100">
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-display font-light tracking-[0.08em] uppercase mb-8 text-ivory-100">
             Neighborhood Guide
           </h2>
           <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-bronze-500 to-transparent mb-8 opacity-50 mx-auto" />
