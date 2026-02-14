@@ -244,7 +244,7 @@ export default function Home() {
             nextSectionBg="obsidian-950"
             isMobile={isMobile}
           />
-
+          {/* 9. Curated Interiors */}
           <CuratedInteriorsSection />
 
           {/* 9. Living Art */}
