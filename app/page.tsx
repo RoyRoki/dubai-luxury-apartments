@@ -132,7 +132,6 @@ export default function Home() {
           <DeveloperPartners />
 
           {/* 2. The Blueprint */}
-          {/* 2. The Blueprint */}
           <ScrollSequence
             key={isMobile ? 'mobile-2' : 'desktop-2'}
             sequenceName="Video_Prompt_Revision_and_Generation"
